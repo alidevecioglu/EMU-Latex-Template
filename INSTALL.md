@@ -7,7 +7,7 @@ works offline. Pick your OS below.
 ## macOS
 
 Install [MacTeX](https://www.tug.org/mactex/) (full distribution, ~5 GB, includes
-everything this template needs — `pdflatex`, `bibtex`, `makeindex`, and every
+everything this template needs: `pdflatex`, `bibtex`, `makeindex`, and every
 package referenced in `EMU_Thesis.sty`):
 
 ```bash
@@ -40,7 +40,7 @@ sudo apt install texlive-full
 `texlive-full` is large (several GB) but guarantees every package this
 template pulls in (`pgfplots`, `tikz`, `datatool`, `imakeidx`, `titlesec`,
 `tocloft`, etc.) is present. If you want a leaner install, `texlive-latex-extra
-texlive-science texlive-fonts-extra texlive-bibtex-extra` covers most of it —
+texlive-science texlive-fonts-extra texlive-bibtex-extra` covers most of it;
 if `pdflatex` complains about a missing `.sty`, install the matching
 `texlive-*` package and re-run.
 

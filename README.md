@@ -5,8 +5,8 @@
 A fork of the official Eastern Mediterranean University thesis LaTeX
 template, with a set of formatting fixes applied that repeatedly came up
 during format-control review across several actual EMU theses (see
-"Fixes applied" below). The template's own design — preamble, geometry,
-title/approval page layout, fonts, bibliography style — is otherwise
+"Fixes applied" below). The template's own design, preamble, geometry,
+title/approval page layout, fonts, and bibliography style, is otherwise
 unchanged from the original.
 
 **This does not exempt you from format control.** It fixes mechanical
@@ -15,10 +15,14 @@ exclusions) that the stock template gets wrong for *every* student by
 default. Content, wording, and anything specific to your program or
 committee is still your responsibility to verify.
 
+Requirements change and new format-control issues surface every year.
+If this template should keep working for future EMU students, see
+`CONTRIBUTING.md` for how to report or fix one.
+
 ## Why LaTeX instead of Word
 
 A thesis is a long, structured, heavily cross-referenced document under a
-strict formatting spec — exactly the case Word handles worst and LaTeX
+strict formatting spec: exactly the case Word handles worst and LaTeX
 handles best.
 
 - **Consistency you don't maintain by hand.** Every table caption is
@@ -34,7 +38,7 @@ handles best.
   reordering a chapter is the moment your figure numbers and your
   "see Table 4.2 above" callouts quietly go stale.
 - **A real diff.** This template is plain text, so `git diff` shows you
-  exactly which sentence changed between two revisions — which is how the
+  exactly which sentence changed between two revisions, which is how the
   formatting fixes in this fork were even findable in the first place.
   Track Changes in a `.docx` is a proprietary binary diff you can only
   view inside Word itself.
@@ -68,17 +72,17 @@ Aykut Hocanin and Ali Ovgun for earlier versions).
 ### Authorship history
 
 `EMU_Thesis.sty` has passed through several hands, each building on the
-last — this fork is the latest link, not a from-scratch rewrite:
+last. This fork is the latest link, not a from-scratch rewrite:
 
 | Who | What they added |
 |---|---|
 | Aykut Hocanin | Original macros for the EMU thesis format |
 | Ali Ovgun (2016) | Revisions to the base template |
-| Erfan A. Shams (2021) | Current published version — nomenclature-package support, horizontal (landscape) page support, INDEX support, and the CC BY 4.0 relicense this fork inherits |
-| Ali Devecioglu (2026, this fork) | The format-control fixes and additions listed above — caption alignment, float placement, page-numbering, appendix list exclusion, revision markup, configurable chair/director title |
+| Erfan A. Shams (2021) | Current published version: nomenclature-package support, horizontal (landscape) page support, INDEX support, and the CC BY 4.0 relicense this fork inherits |
+| Ali Devecioglu (2026, this fork) | The format-control fixes and additions listed above: caption alignment, float placement, page-numbering, appendix list exclusion, revision markup, configurable chair/director title |
 
 Each of those additions exists because the version before it didn't do
-something a real thesis needed — landscape pages for wide figures, an
+something a real thesis needed: landscape pages for wide figures, an
 index for a math-heavy thesis, and, for this fork, format-control
 rejections that kept recurring across multiple students' actual defense
 submissions (see "Fixes applied" above for the specific reasoning behind
@@ -86,10 +90,10 @@ each one).
 
 ### Contributors
 
-The fixes in this fork weren't guessed at — they're things this
-project's author and the following fellow EMU students independently
-hit and confirmed in their own theses' format-control review, which is
-what made them worth fixing here for everyone:
+The fixes in this fork weren't guessed at. They're things this project's
+author and the following fellow EMU students independently hit and
+confirmed in their own theses' format-control review, which is what made
+them worth fixing here for everyone:
 
 - [İsmet Volkan Mimar](https://github.com/ism3t)
 - [Mustafa Mehmet Yaman](https://github.com/YamanMustafa)
@@ -103,7 +107,7 @@ cd EMU-Latex-Template
 ```
 
 See `INSTALL.md` if `pdflatex`/`bibtex`/`makeindex` aren't installed yet
-(macOS/Linux). Or just open the folder in Overleaf — the template was
+(macOS/Linux). Or just open the folder in Overleaf: the template was
 originally written for and tested there, and still works the same way.
 
 Edit `EMU_Thesis.tex` for your title, author, committee, and front-matter
@@ -117,8 +121,8 @@ the two example chapters are.
 `main`/`master` (or manually via the Actions tab) and publishes a
 [GitHub Release](../../releases) with the PDF attached, named
 `<title>-v<run-number>.pdf`, plus the 2-page cover/approval PDF. It runs
-the exact same `compile.sh` you'd run locally — inside the official
-`texlive/texlive` container so the environment matches — so a release
+the exact same `compile.sh` you'd run locally, inside the official
+`texlive/texlive` container so the environment matches, so a release
 only appears if the real build actually succeeds. No setup needed: it
 uses the repo's default `GITHUB_TOKEN`, no secrets to configure. Disable
 it by deleting the workflow file if you'd rather build and share PDFs by
@@ -146,8 +150,8 @@ from `EMU_Thesis.tex` in order; put your images in `figures/`.
 ## Fixes applied over the original template
 
 Each of these was independently confirmed against real EMU format-control
-feedback on more than one thesis before being folded in here — not
-guessed at from the template alone.
+feedback on more than one thesis before being folded in here, not guessed
+at from the template alone.
 
 1. **Table/figure caption alignment.** IGSR format control expects table
    captions left-aligned and figure captions centered; the stock template
@@ -158,7 +162,7 @@ guessed at from the template alone.
    \captionsetup[figure]{justification=centering,singlelinecheck=false}
    ```
    With this set globally, don't add `\centering` inside `\caption{}` for
-   tables — it fights the global setting for that one caption.
+   tables: it fights the global setting for that one caption.
 
 2. **Figures/tables jumping to the top of the next page.** With LaTeX's
    default float parameters, a figure or table that *almost* fits under
@@ -170,7 +174,7 @@ guessed at from the template alone.
    \AtEndEnvironment{figure}{\vspace*{-6pt}}
    \AtEndEnvironment{table}{\vspace*{-18pt}}
    ```
-   This is a targeted hack, not a principled fix — if you see any caption
+   This is a targeted hack, not a principled fix. If you see any caption
    crowding a table/figure body after adding a lot of new floats, check
    this first.
 
@@ -191,7 +195,7 @@ guessed at from the template alone.
    ```
 
 5. **Wide tables silently overflowing the right margin.** Not a macro
-   fix — a documented pitfall (see the comment in
+   fix, a documented pitfall (see the comment in
    `chapters/02-preliminary-sections.tex`). An unwrapped `l`/`c`/`r`
    table column takes the natural width of its widest cell; one long
    entry in that column can push the whole table past the text width
@@ -224,7 +228,7 @@ guessed at from the template alone.
 
 8. **Department vs. School title on the approval page.** Some EMU units
    are organized as a "Department" (signed by a Chair) and others as a
-   "School" (signed by a Director/Acting Director) — the stock template
+   "School" (signed by a Director/Acting Director); the stock template
    hardcodes "Chair, Department of". Now configurable:
    ```latex
    \DeptChairTitle{Acting Director, School of}  % only if your unit needs it
@@ -238,5 +242,5 @@ The document class, page geometry, fonts, title-page and approval-page
 layout, bibliography style, index mechanism, and every example chapter's
 actual instructional content are all exactly as the original template
 shipped them. If format control flags something not on the list above,
-that's real content you need to fix yourself — check the IGSR guideline
+that's real content you need to fix yourself: check the IGSR guideline
 document referenced in Chapter 1 first.
