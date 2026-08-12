@@ -1,5 +1,7 @@
 # EMU Thesis LaTeX Template (fixed fork)
 
+![A man happily throws a Word document into the trash while a laptop on a nearby desk displays cleanly typeset LaTeX math](images/man-throws-word-into-trash.png)
+
 A fork of the official Eastern Mediterranean University thesis LaTeX
 template, with a set of formatting fixes applied that repeatedly came up
 during format-control review across several actual EMU theses (see
@@ -13,6 +15,46 @@ exclusions) that the stock template gets wrong for *every* student by
 default. Content, wording, and anything specific to your program or
 committee is still your responsibility to verify.
 
+## Why LaTeX instead of Word
+
+A thesis is a long, structured, heavily cross-referenced document under a
+strict formatting spec — exactly the case Word handles worst and LaTeX
+handles best.
+
+- **Consistency you don't maintain by hand.** Every table caption is
+  left-aligned and every figure caption is centered because it's declared
+  once (`\captionsetup`), not because you remembered to fix each one.
+  Word's Styles panel can do this in principle; in practice a 100-page
+  thesis with pasted-in tables from three sources always ends up
+  inconsistent somewhere, and Track Changes is not the tool that catches it.
+- **Numbering that never drifts.** Chapter, section, table, figure, and
+  equation numbers, and every cross-reference to them (`Table~\ref{...}`,
+  `Section~\ref{...}`), are computed at compile time. Reorder a chapter and
+  every number and every reference to it updates automatically. In Word,
+  reordering a chapter is the moment your figure numbers and your
+  "see Table 4.2 above" callouts quietly go stale.
+- **A real diff.** This template is plain text, so `git diff` shows you
+  exactly which sentence changed between two revisions — which is how the
+  formatting fixes in this fork were even findable in the first place.
+  Track Changes in a `.docx` is a proprietary binary diff you can only
+  view inside Word itself.
+- **The bibliography is a database, not a chore.** `references.bib` +
+  `\cite{}` means adding a citation, reordering references, or switching
+  citation styles (APA, IEEE, Chicago) is a one-line style change, not a
+  manual renumbering pass. Word's citation manager works until it doesn't,
+  usually right before a deadline.
+- **Math that looks like math.** `$e^{\pi i} + 1 = 0$` versus Word's
+  Equation Editor, which is a separate, slower, less expressive tool
+  bolted onto a word processor rather than a first-class part of the
+  document language.
+- **It's just a text file.** No "this document was created in a newer
+  version of Word," no corrupted `.docx` the night before submission, no
+  license required to open it. Any editor, any OS, forever.
+
+The tradeoff is real: LaTeX has a learning curve Word doesn't, and this
+template's job is to absorb as much of that curve as possible so you're
+fighting your content, not your typesetting.
+
 ## Credit and license
 
 Original template: **"Eastern Mediterranean University (EMU) Thesis
@@ -22,6 +64,25 @@ BY 4.0)**. This fork and its modifications are licensed the same way.
 See `LICENSE` for the full notice, and the header comments in
 `EMU_Thesis.sty` for the file's own attribution history (it also credits
 Aykut Hocanin and Ali Ovgun for earlier versions).
+
+### Authorship history
+
+`EMU_Thesis.sty` has passed through several hands, each building on the
+last — this fork is the latest link, not a from-scratch rewrite:
+
+| Who | What they added |
+|---|---|
+| Aykut Hocanin | Original macros for the EMU thesis format |
+| Ali Ovgun (2016) | Revisions to the base template |
+| Erfan A. Shams (2021) | Current published version — nomenclature-package support, horizontal (landscape) page support, INDEX support, and the CC BY 4.0 relicense this fork inherits |
+| Ali Devecioglu (2026, this fork) | The format-control fixes and additions listed above — caption alignment, float placement, page-numbering, appendix list exclusion, revision markup, configurable chair/director title |
+
+Each of those additions exists because the version before it didn't do
+something a real thesis needed — landscape pages for wide figures, an
+index for a math-heavy thesis, and, for this fork, format-control
+rejections that kept recurring across multiple students' actual defense
+submissions (see "Fixes applied" above for the specific reasoning behind
+each one).
 
 ## Getting started
 
@@ -39,6 +100,19 @@ Edit `EMU_Thesis.tex` for your title, author, committee, and front-matter
 metadata (marked with comments), then write your actual chapters in
 `chapters/` and reference them with `\input{chapters/...}` the same way
 the two example chapters are.
+
+## Automated PDF releases
+
+`.github/workflows/release.yml` builds the thesis on every push to
+`main`/`master` (or manually via the Actions tab) and publishes a
+[GitHub Release](../../releases) with the PDF attached, named
+`<title>-v<run-number>.pdf`, plus the 2-page cover/approval PDF. It runs
+the exact same `compile.sh` you'd run locally — inside the official
+`texlive/texlive` container so the environment matches — so a release
+only appears if the real build actually succeeds. No setup needed: it
+uses the repo's default `GITHUB_TOKEN`, no secrets to configure. Disable
+it by deleting the workflow file if you'd rather build and share PDFs by
+hand.
 
 ## File structure
 

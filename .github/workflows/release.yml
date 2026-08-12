@@ -1,0 +1,60 @@
+name: Release thesis PDF
+
+# Builds the thesis with the exact same compile.sh used locally, then
+# publishes a numbered GitHub Release with "<title>-vN.pdf" attached, so
+# there's always a downloadable "latest passing build" without anyone
+# running compile.sh by hand and uploading it themselves.
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-release:
+    runs-on: ubuntu-latest
+    container:
+      image: texlive/texlive:latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Install poppler-utils
+        # compile.sh needs pdfinfo/pdfseparate/pdfunite for the cover-page
+        # extraction; the texlive image doesn't include them by default.
+        run: |
+          apt-get update
+          apt-get install -y --no-install-recommends poppler-utils
+
+      - name: Build PDF
+        run: |
+          chmod +x compile.sh
+          ./compile.sh
+
+      - name: Determine release name
+        id: meta
+        run: |
+          TITLE="$(
+            sed -n 's/^[[:space:]]*\\title{\(.*\)}[[:space:]]*$/\1/p' EMU_Thesis.tex |
+              sed -n '1p' |
+              sed 's#[/:*?"<>|]# #g; s/[[:space:]][[:space:]]*/ /g; s/^ //; s/ $//'
+          )"
+          VERSION="v${{ github.run_number }}"
+          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "release_pdf=${TITLE}-${VERSION}.pdf" >> "$GITHUB_OUTPUT"
+
+      - name: Rename PDF for release
+        run: mv "${{ steps.meta.outputs.title }}.pdf" "${{ steps.meta.outputs.release_pdf }}"
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.meta.outputs.version }}
+          name: "Thesis build ${{ steps.meta.outputs.version }}"
+          files: |
+            ${{ steps.meta.outputs.release_pdf }}
+            ${{ steps.meta.outputs.title }} - Cover-Approval.pdf
