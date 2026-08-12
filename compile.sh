@@ -55,9 +55,13 @@ THESIS_TITLE="$(
 )"
 [[ -n "$THESIS_TITLE" ]] || die "Could not read a single-line \\title{...} from $MAIN_TEX"
 
+# Strips filesystem-unsafe characters, LaTeX escapes (\), and braces, since
+# the title is read as raw LaTeX source (e.g. the placeholder title's
+# "\LaTeX~" would otherwise leave a literal backslash in the filename,
+# which breaks glob-based file matching such as the release workflow's).
 OUTPUT_STEM="$(
   printf '%s' "$THESIS_TITLE" |
-    sed 's#[/:*?"<>|]# #g; s/[[:space:]][[:space:]]*/ /g; s/^ //; s/ $//'
+    sed 's#[/:*?"<>|\\{}]# #g; s/[[:space:]][[:space:]]*/ /g; s/^ //; s/ $//'
 )"
 [[ -n "$OUTPUT_STEM" ]] || die "The thesis title did not produce a valid filename"
 THESIS_OUTPUT="$ROOT_DIR/$OUTPUT_STEM.pdf"
@@ -107,6 +111,15 @@ COVER_PAGE_COUNT="$(pdfinfo "$TEMP_DIR/cover-approval.pdf" | awk '/^Pages:/ { pr
 
 mv -f -- "$TEMP_DIR/$OUTPUT_STEM.pdf" "$THESIS_OUTPUT"
 mv -f -- "$TEMP_DIR/cover-approval.pdf" "$COVER_OUTPUT"
+
+# Remove the intermediate build PDF so exactly the two deliverables above
+# remain at the repo root (matters for anything that globs "*.pdf", e.g.
+# the release workflow). Guard against the unlikely case where the title
+# sanitized down to the job name itself, which would make this the same
+# file as $THESIS_OUTPUT.
+if [[ "$BUILD_PDF" != "$THESIS_OUTPUT" && -f "$BUILD_PDF" ]]; then
+  rm -f -- "$BUILD_PDF"
+fi
 
 printf '\nCreated:\n'
 printf '  %s (%s pages)\n' "$THESIS_OUTPUT" "$FULL_PAGE_COUNT"

@@ -34,21 +34,30 @@ jobs:
           chmod +x compile.sh
           ./compile.sh
 
-      - name: Determine release name
+      - name: Rename full thesis PDF with a version number
         id: meta
         run: |
-          TITLE="$(
-            sed -n 's/^[[:space:]]*\\title{\(.*\)}[[:space:]]*$/\1/p' EMU_Thesis.tex |
-              sed -n '1p' |
-              sed 's#[/:*?"<>|]# #g; s/[[:space:]][[:space:]]*/ /g; s/^ //; s/ $//'
-          )"
+          set -Eeuo pipefail
           VERSION="v${{ github.run_number }}"
-          echo "title=$TITLE" >> "$GITHUB_OUTPUT"
-          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "release_pdf=${TITLE}-${VERSION}.pdf" >> "$GITHUB_OUTPUT"
 
-      - name: Rename PDF for release
-        run: mv "${{ steps.meta.outputs.title }}.pdf" "${{ steps.meta.outputs.release_pdf }}"
+          # Discover what compile.sh actually produced instead of
+          # reconstructing the filename from \title{...} a second time
+          # (that duplication is exactly what broke this before: this step
+          # used to derive its own, less-sanitized copy of the title and
+          # produce a filename that didn't match the one compile.sh wrote).
+          COVER_PDF="$(find . -maxdepth 1 -name '* - Cover-Approval.pdf' -printf '%f\n')"
+          FULL_PDF="$(find . -maxdepth 1 -name '*.pdf' ! -name '* - Cover-Approval.pdf' -printf '%f\n')"
+
+          [ -n "$COVER_PDF" ] || { echo "::error::Cover-Approval PDF not found after compile.sh"; exit 1; }
+          [ -n "$FULL_PDF" ] || { echo "::error::Full thesis PDF not found after compile.sh"; exit 1; }
+          [ "$(printf '%s\n' "$FULL_PDF" | wc -l)" -eq 1 ] || { echo "::error::Expected exactly one non-cover PDF, found: $FULL_PDF"; exit 1; }
+
+          RELEASE_PDF="${FULL_PDF%.pdf}-${VERSION}.pdf"
+          mv -- "$FULL_PDF" "$RELEASE_PDF"
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "release_pdf=$RELEASE_PDF" >> "$GITHUB_OUTPUT"
+          echo "cover_pdf=$COVER_PDF" >> "$GITHUB_OUTPUT"
 
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v2
@@ -57,4 +66,4 @@ jobs:
           name: "Thesis build ${{ steps.meta.outputs.version }}"
           files: |
             ${{ steps.meta.outputs.release_pdf }}
-            ${{ steps.meta.outputs.title }} - Cover-Approval.pdf
+            ${{ steps.meta.outputs.cover_pdf }}

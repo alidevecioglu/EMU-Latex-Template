@@ -118,9 +118,13 @@
 \begin{abstract}
 Use this section to write down the abstract of your thesis. The length of the abstract must \textit{not} exceed 300 words. To keep the abstract short, avoid using too many introductory materials, and keep them for the introduction chapter.
 
-At the end of the abstract, you need to provide 3 to 5 keywords related to the topic of your thesis. Keywords help others interested in your field to find your work more easily. The keywords need to be separated using a comma or a semicolon. Use the same separator for ÖZ as well. Capitalize the first letter of each keyword (format control checks for this).
+At the end of the abstract, you need to provide 3 to 5 keywords related to the topic of your thesis. Keywords help others interested in your field to find your work more easily. The keywords need to be separated using a comma or a semicolon. Use the same separator for ÖZ as well.
 
-\noindent \textbf{Keywords}: Keyword One, Keyword Two, ...
+% Every word of every keyword is capitalized automatically by \titlecap{}
+% (format control checks for this). Just type the keywords in lowercase
+% below and \titlecap{} takes care of the rest; it also correctly leaves
+% acronyms/abbreviations you've already typed in caps (e.g. RAG) alone.
+\noindent \textbf{Keywords}: \titlecap{keyword one, keyword two, ...}.
 \end{abstract}
 
 %================== ÖZ ============================================
@@ -129,6 +133,11 @@ Tezinizin özetini yazmak için bu bölümü kullanın. Özetin uzunluğu 300 ke
 
 Özetin sonunda tezinizin konusu ile ilgili 3 - 5 anahtar kelime sağlamanız gerekmektedir. Anahtar kelimeler, alanınızla ilgilenen diğer kişilerin çalışmanızı daha kolay bulmasına yardımcı olur. Anahtar kelimelerin virgül veya noktalı virgül kullanılarak ayrılmalıdır. ABSTRACT için de aynı noktalama işaretini kullanınız. Her anahtar kelimenin ilk harfini büyük yazın (format kontrolü bunu denetler).
 
+% \titlecap{} is NOT used here on purpose: it does not handle Turkish
+% casing correctly (dotless "ı" is skipped entirely, and dotted "i" is
+% wrongly capitalized to plain "I" instead of "İ", e.g. "iğne" wrongly
+% becomes "Iğne" instead of "İğne"). Capitalize each Turkish keyword by
+% hand and double-check dotted/dotless I's in the compiled PDF.
 \noindent \textbf{Anahtar Kelimeler}: Anahtar Kelime Bir, Anahtar Kelime İki, ...
 \end{ozet}
 

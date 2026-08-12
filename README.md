@@ -76,12 +76,12 @@ last. This fork is the latest link, not a from-scratch rewrite:
 
 | Who | What they added |
 |---|---|
-| Aykut Hocanin | Original macros for the EMU thesis format |
-| Ali Ovgun (2016) | Revisions to the base template |
+| [Aykut Hocanin](https://ee.emu.edu.tr/en/people/staff-detail?sid=291&n=aykut-hocanin) | Original macros for the EMU thesis format |
+| [Ali Ovgun](https://staff.emu.edu.tr/aliovgun/tr) (2016) | Revisions to the base template |
 | Erfan A. Shams (2021) | Current published version: nomenclature-package support, horizontal (landscape) page support, INDEX support, and the CC BY 4.0 relicense this fork inherits |
 | [İsmet Volkan Mimar](https://github.com/ism3t) (2026) | Independently confirmed the caption-alignment and appendix-list format-control issues in his own thesis, and the figure/table float-placement fix folded into this fork |
 | [Mustafa Mehmet Yaman](https://github.com/YamanMustafa) (2026) | Independently confirmed the caption-alignment, page-numbering, and caption-capitalization format-control issues in his own thesis |
-| Ali Devecioglu (2026, this fork) | The format-control fixes and additions listed above: caption alignment, float placement, page-numbering, appendix list exclusion, revision markup, configurable chair/director title |
+| [Ali Devecioglu](https://devecy.com) (2026, this fork) | The format-control fixes and additions listed above: caption alignment, float placement, page-numbering, appendix list exclusion, revision markup, configurable chair/director title |
 
 Each of those additions exists because the version before it didn't do
 something a real thesis needed: landscape pages for wide figures, an
