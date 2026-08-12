@@ -79,6 +79,8 @@ last. This fork is the latest link, not a from-scratch rewrite:
 | Aykut Hocanin | Original macros for the EMU thesis format |
 | Ali Ovgun (2016) | Revisions to the base template |
 | Erfan A. Shams (2021) | Current published version: nomenclature-package support, horizontal (landscape) page support, INDEX support, and the CC BY 4.0 relicense this fork inherits |
+| [İsmet Volkan Mimar](https://github.com/ism3t) (2026) | Independently confirmed the caption-alignment and appendix-list format-control issues in his own thesis, and the figure/table float-placement fix folded into this fork |
+| [Mustafa Mehmet Yaman](https://github.com/YamanMustafa) (2026) | Independently confirmed the caption-alignment, page-numbering, and caption-capitalization format-control issues in his own thesis |
 | Ali Devecioglu (2026, this fork) | The format-control fixes and additions listed above: caption alignment, float placement, page-numbering, appendix list exclusion, revision markup, configurable chair/director title |
 
 Each of those additions exists because the version before it didn't do
@@ -88,15 +90,9 @@ rejections that kept recurring across multiple students' actual defense
 submissions (see "Fixes applied" above for the specific reasoning behind
 each one).
 
-### Contributors
-
-The fixes in this fork weren't guessed at. They're things this project's
-author and the following fellow EMU students independently hit and
-confirmed in their own theses' format-control review, which is what made
-them worth fixing here for everyone:
-
-- [İsmet Volkan Mimar](https://github.com/ism3t)
-- [Mustafa Mehmet Yaman](https://github.com/YamanMustafa)
+The fixes in this fork weren't guessed at: every one was confirmed
+against real format-control feedback on more than one student's actual
+thesis before being folded in here.
 
 ## Getting started
 
