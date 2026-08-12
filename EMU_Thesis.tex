@@ -1,0 +1,279 @@
+% !TEX encoding = UTF-8 Unicode
+
+\documentclass[a4paper,12pt,oneside]{report}
+
+\usepackage{EMU_Thesis}
+\usepackage[a4paper,left=4cm,right=2.5cm,top=2.5cm,bottom=2.5cm,footskip=.8cm]{geometry}
+%\usepackage{afterpage}
+%\usepackage{import} %for importing text from other tex files. Usage: \import{〈full-path〉}{〈file〉} or \subimport{〈path-extension〉}{〈file〉}
+%\usepackage{float}
+
+% --- Fork fixes (see README "Fixes applied over the original template") ---
+% Table captions left-aligned, figure captions centered -- this is what IGSR
+% format control actually checks for, and the stock template sets neither.
+\captionsetup[table]{justification=raggedright,singlelinecheck=false}
+\captionsetup[figure]{justification=centering,singlelinecheck=false}
+
+% Without this, a figure/table that almost-but-not-quite fits under its
+% paragraph gets pushed to the top of the NEXT page, leaving a dead gap
+% behind it. Trimming a little trailing space lets more floats stay put.
+\AtEndEnvironment{figure}{\vspace*{-6pt}}
+\AtEndEnvironment{table}{\vspace*{-18pt}}
+
+% for hbox overfull problem
+\setlength{\emergencystretch}{2pt}
+
+\pgfplotsset{width=10cm,compat=1.9}
+\usepgfplotslibrary{external}
+
+\headsep = 0pt
+
+%\tikzexternalize
+\setcounter{MaxMatrixCols}{10}
+
+\pagestyle{plain}
+
+% Title of the Thesis or Dissertation
+\title{Eastern Mediterranean University \LaTeX~Template for Master and PhD Theses}
+% Author's Name
+\author{Author Name}
+% Degree (Master of Science, Master of Arts, Doctor of Philosophy etc.)
+\degree{Doctor of Philosophy}
+% Change 'in' to 'of' for Master of Business Administration
+\inof{in}
+% Program
+\program{Applied Mathematics and Computer Science}
+% Defense Year
+\defenseyear{2021}
+% Defense Month
+\defensemonth{June}
+% Department
+\Dept{Mathematics}
+% IGSR Director
+\InstituteDirector{Prof. Dr. Ali Hakan Ulusoy}
+% Department/School Chair.
+% Some EMU units are organized as a "Department" (chaired by a Chair) and
+% others as a "School" (chaired by a Director/Acting Director) -- check your
+% own approval page precedent for the correct wording before submitting.
+\DeptChair{Prof. Dr. Nazim Mahmudov}
+% Uncomment and edit if your unit is a School rather than a Department
+% (default below matches "Chair, Department of <Dept>"):
+%\DeptChairTitle{Acting Director, School of}
+% Supervisor
+\supervisor{Prof. Dr. Ahmet Rizaner}
+% Co-Supervisor (if available)
+\cosuperi{Prof. Dr. Ali Hakan Ulusoy}
+% Examining committee list
+% \examiner{Title}{First & Middle Name}{Surname}
+% Possible titles are: 'Prof. Dr.', 'Assoc. Prof. Dr.', 'Asst. Prof. Dr.', and 'Dr.'
+% Capitalization is important (Only first letter of every word is capital).
+\examiner{Assoc. Prof. Dr.}{Derviş}{Subaşı}
+\examiner{Asst. Prof. Dr.}{Müge}{Saadetoğlu}
+\examiner{Prof. Dr.}{Rashad}{Aliyev}
+\examiner{Prof. Dr.}{Rza}{Bashirov}
+\examiner{Prof. Dr.}{Aghamirza}{Bashirov}
+\examiner{Assoc. Prof. Dr.}{Suzan}{Cival Buranay}
+\examiner{Prof. Dr.}{Benedek Norbert}{Nagy}
+
+% no indent
+\setlength\parindent{0pt}
+% set the paragraph spacing
+\parskip 24pt
+
+% PDF metadata shown in the viewer's title bar and File > Properties.
+% Uses whatever \title{...}/\author{...} you set above -- nothing to edit here.
+\makeatletter
+\hypersetup{pdftitle=\@title, pdfauthor=\@author}
+\makeatother
+
+% --- Optional: committee-revision markup -----------------------------
+% \revadd{...} renders red text (material added in response to committee
+% feedback); \flaghl{...} renders a yellow highlight (existing material the
+% committee asked to see pointed out). Both are plain text again once you
+% build with the CLEANCOPY flag, so you never have to hand-edit them out:
+%   pdflatex -jobname=EMU_Thesis_formatcheck "\def\CLEANCOPY{1}\input{EMU_Thesis.tex}"
+% See README "Fixes applied" and EMU_Thesis.sty for the definitions.
+% -----------------------------------------------------------------------
+
+\begin{document}
+
+% page numbering for the preliminary sections
+\pagenumbering{roman}
+
+% Justify text without hyphenation
+% (You may disable this option but doing so may create problems in justifying paragraphs)
+\tolerance=1
+\emergencystretch=\maxdimen
+\hyphenpenalty=10000
+\hbadness=10000
+
+%##################################################################
+% Preliminary section
+%##################################################################
+%================== Title and Signature Pages =====================
+\makethesistitle
+\makeapprovalpage
+
+%================== ABSTRACT ======================================
+\begin{abstract}
+Use this section to write down the abstract of your thesis. The length of the abstract must \textit{not} exceed 300 words. To keep the abstract short, avoid using too many introductory materials, and keep them for the introduction chapter.
+
+At the end of the abstract, you need to provide 3 to 5 keywords related to the topic of your thesis. Keywords help others interested in your field to find your work more easily. The keywords need to be separated using a comma or a semicolon. Use the same separator for ÖZ as well. Capitalize the first letter of each keyword (format control checks for this).
+
+\noindent \textbf{Keywords}: Keyword One, Keyword Two, ...
+\end{abstract}
+
+%================== ÖZ ============================================
+\begin{ozet}
+Tezinizin özetini yazmak için bu bölümü kullanın. Özetin uzunluğu 300 kelimeyi \textit{geçmemelidir}. Özeti kısa tutmak için çok fazla giriş materyali kullanmaktan kaçının ve bunları giriş bölümü için saklayın.
+
+Özetin sonunda tezinizin konusu ile ilgili 3 - 5 anahtar kelime sağlamanız gerekmektedir. Anahtar kelimeler, alanınızla ilgilenen diğer kişilerin çalışmanızı daha kolay bulmasına yardımcı olur. Anahtar kelimelerin virgül veya noktalı virgül kullanılarak ayrılmalıdır. ABSTRACT için de aynı noktalama işaretini kullanınız. Her anahtar kelimenin ilk harfini büyük yazın (format kontrolü bunu denetler).
+
+\noindent \textbf{Anahtar Kelimeler}: Anahtar Kelime Bir, Anahtar Kelime İki, ...
+\end{ozet}
+
+%================== DEDICATION (optional) =========================
+\begin{notitlededication} %use {dedication} if you want the page title
+\vspace{\fill}
+\begin{center}
+{\calligra... Dedicated to X} % you are not forced to use calligra font
+
+The current page is using \texttt{notitlededication} for the Dedication page, this option will not print the title of this page. You may use the \texttt{dedication} if you want to include the title for this page. Also you may use any standard font face other than Times New Roman in this page.
+\end{center}
+\vspace{\fill}
+\end{notitlededication}
+
+%================== ACKNOWLEDGEMENTS (optional) ===================
+\begin{acknowledgements}
+
+In the acknowledgments section, you may express your gratitude towards others who helped you in completing your study and contributed to preparing your thesis.
+
+Keep your acknowledgments section short and avoid going beyond one page.
+
+\end{acknowledgements}
+
+%================== PREFACE (optional) ============================
+%\begin{preface}
+% Preface is optional.
+%\end{preface}
+
+%================== TABLE OF CONTENTS =============================
+\tableofcontents
+
+%================== LIST OF TABLES (if available) =================
+\listoftables
+
+%================== LIST OF FIGURES (if available) ================
+\listoffigures
+
+%================== ABBREVIATIONS (if available) ==================
+% For the list of symbols and abbreviations you have two options:
+% 1. You can use nomencl package for the list of symbols and abbreviations. Follow the given example below:
+% Note: use [aa] prefix before English symbols to force English letter symbols sorted at the beginning, and use [ab] prefix to sort Greek letter symbols afterward. For abbreviations you don't need to use any prefix.
+
+%\nomenclature[aa]{$h$}{Planck constant}
+%\nomenclature[aa]{$c$}{Speed of light in a vacuum inertial frame}
+%\nomenclature[ab]{$\phi$}{Golden ratio}
+%\nomenclature[ab]{$\mu$}{Micro sign}
+%\nomenclature{sps}{Samples Per Second}
+%\nomenclature{IMU}{Inertial Measurement Unit}
+%\nomenclature{SoC}{System on Chip}
+%\nomenclature{DMP}{Digital Motion Processor}
+%\nomenclature{DSP}{Digital Signal Processor}
+%\nomenclature{QFN}{Quad Flat No-leads}
+%\nomenclature{LED}{Light-Emitting Diode}
+%\nomenclature{GPIO}{General Purpose Input/Output}
+
+%\printnomenclature
+
+
+% 2. You can also use the below definitions for symbols and abbreviations instead of nomancl package (explained above). This way you can have separate list of symbols and list of abbreviations (optional).
+% It is recommended to sort the list by an external software. The internal sorting function may not be accurate depending on the content.
+
+% Create symbols
+\DTLnewdb{symbols}
+\addsymbol{$c$}{Speed of light in a vacuum inertial frame}
+\addsymbol{$h$}{Planck constant}
+\addsymbol[b]{$\mu$}{Micro sign}
+\addsymbol[b]{$\phi$}{Golden ratio}
+
+% Sort the list if needed
+\DTLsort*{Acronym}{symbols}
+
+
+% Create abbreviations
+\DTLnewdb{abbreviation}
+% Define the ABBREVIATIONS database as follows
+\addabbreviation{sps}{ Samples Per Second}
+\addabbreviation{IMU}{Inertial Measurement Unit}
+\addabbreviation{SoC}{System on Chip}
+\addabbreviation{DMP}{Digital Motion Processor}
+\addabbreviation{DSP}{Digital Signal Processor}
+\addabbreviation{QFN}{Quad Flat No-leads}
+\addabbreviation{LED}{Light-Emitting Diode}
+\addabbreviation{GPIO}{General Purpose Input/Output}
+
+% Sort the list if needed
+\DTLsort*{Acronym}{abbreviation}
+
+
+
+% Use one of the page titles below depending on the content of your list:
+
+\begin{symbolsandabbreviations}
+  % Display the contents of the database
+\end{symbolsandabbreviations}
+
+%\begin{symbols}
+  % Display the contents of the database
+%\end{symbols}
+
+%\begin{abbreviations}
+  % Display the contents of the database
+%\end{abbreviations}
+
+
+
+%##################################################################
+% End of the preliminary section
+%##################################################################
+
+% Begin the thesis body ==========================================
+\clearpage
+\pagenumbering{arabic} % page numbering for the thesis body
+
+\input{chapters/01-introduction}
+\input{chapters/02-preliminary-sections}
+
+%================== REFERENCES ==================
+% You may either use thebibliography environment to manually
+% add the references
+%\begin{thebibliography}{2}
+%\bibitem{igsr} "Writing Your Thesis, Defence and Graduation Procedures", \textit{Institute of Graduate Studies and Research - EMU}, 2020. [Online]. Available: %https://grad.emu.edu.tr/en/academic-issues/theses. [Accessed: 22- Jun- 2020].
+
+%\bibitem{overleaf} "Overleaf, Online LaTeX Editor", \textit{Overleaf}, 2020. [Online]. Available: https://www.overleaf.com. [Accessed: 22- Jun- 2020].
+%\end{thebibliography}
+
+% or you may use a bibtex file with proper style
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+%================== APPENDIX / APPENDICES (if available) ==================
+% Use 'appendix' or 'appendices' depending on your appendix contents
+%\begin{appendix}
+%    This is appendix with no specific sections.
+%\end{appendix}
+
+\begin{appendices}
+% Fork fix: keep appendix tables/figures out of the front-matter lists.
+\captionsetup[table]{list=no}
+\captionsetup[figure]{list=no}
+
+\input{chapters/appendices}
+\end{appendices}
+
+%================== INDEX (if available) ==================
+\printindex
+
+%############ End of Document (don't delete) ##############
+\end{document}

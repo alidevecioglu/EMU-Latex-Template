@@ -1,0 +1,1675 @@
+%%
+%% This is file EMU_Thesis.sty
+%% It provides you macros necessary to typeset a thesis
+%% in the format required by the Institute of Graduate
+%% Studies and Research at Eastern Mediterranean University
+%%
+%% Prepared by Aykut HOCANIN (n.d.)
+%% Modified by Ali Ovgun (2016)
+%% Modified by Erfan Amirzadeh Shams (2021)
+%% Thanks to Sara Salehi for contribution to the ToC codes
+%% Thanks to all alpha testers who cooperated in bug reports
+%% Last modified on 12/12/2021 (v0.095)
+%% -Latest major change: added support for nomancl package. Added horizontal page support. Added INDEX.
+%% -Latest minor change: added hypothesis environment, added hyphen for URLs, fixed the equation spacing inside lists. orphan control for section titles, chapter titles in ToC are all uppercase, made equation numbers fixed size, dynamic spaces after numbers in tocloft, sorted the packages to be all in the sty file.
+%% TODO: configure float package
+%%
+%% ---------------------------------------------------------------------
+%% Forked and modified by Ali Devecioglu (2026), based on "Eastern
+%% Mediterranean University (EMU) Thesis LaTeX Template 2022 (v1.0)" by
+%% Erfan A. Shams, licensed CC BY 4.0. See this repository's README.md
+%% for the full list of changes and LICENSE for the attribution notice.
+%% -Fixed: table captions were not left-aligned and figure captions were
+%%  not centered, both required by IGSR format control but unset by the
+%%  stock template (\captionsetup additions in EMU_Thesis.tex).
+%% -Fixed: figures/tables that almost fit under their paragraph were
+%%  pushed to the top of the next page instead, leaving a dead gap
+%%  (trailing \vspace* trim on the figure/table environments).
+%% -Fixed: main-body page numbering could start on the wrong page
+%%  (\clearpage added before \pagenumbering{arabic}).
+%% -Added: \captionsetup{list=no} pattern so appendix tables/figures are
+%%  excluded from the front-matter List of Tables/Figures, as required.
+%% -Added: optional \revadd/\flaghl committee-revision markup with a
+%%  \CLEANCOPY build flag to strip it for a plain formatting-review copy.
+%% -Added: configurable \DeptChairTitle for units organized as a School
+%%  (Director) rather than a Department (Chair).
+%% ---------------------------------------------------------------------
+%%
+%% Copying of part or all of any file in the EMU_Thesis.sty package
+%% is allowed under the following conditions only:
+%% (1) You may freely distribute unchanged copies of the files.
+%%     Please include the documentation when you do so.
+%% (2) You may modify a renamed copy of this file, but only for
+%%     personal use.
+%% (3) You may copy fragments from the files, for personal use
+%%     or for use in a macro package for distribution, as long
+%%     as credit is given where credit is due.
+%%
+%% You are NOT ALLOWED to take money for the distribution or
+%% use of these and associated files or modified versions or
+%% fragments thereof.
+%%
+%% As published on Overleaf (see README.md / LICENSE), the current
+%% template is offered under Creative Commons CC BY 4.0, which permits
+%% this kind of public fork provided the original author is credited;
+%% that later license governs this file over the older terms above.
+%%
+%% Please report any bugs or suggestions to igsr@emu.edu.tr
+%%
+%%
+%%
+\typeout{Thesis style for IGSR, Eastern Mediterranean University, Version 0.095}
+%%
+% Packages
+\usepackage[compact]{titlesec}
+\usepackage{titletoc}
+\usepackage{tocloft}
+\usepackage{chngcntr}
+\usepackage[utf8]{inputenc} % for Turkish characters
+%\usepackage[latin1]{inputenc}
+\usepackage{datatool}
+\dtlenableUTFviii
+%\usepackage{datatooltk} %for sorting
+\usepackage{etoolbox}
+\usepackage{xcolor}
+\usepackage{soul} % \hl{} highlighting for the optional committee-revision markup (see \revadd, \flaghl below)
+\usepackage{amsmath,amsfonts,amssymb,amsthm,epsfig,epstopdf,titling,array}
+\usepackage[hyphens]{url} % hyphen for URLs
+\urlstyle{same}
+\usepackage[switch, modulo]{lineno}
+\usepackage{enumitem} % for fixing item spacing
+\usepackage{calc}
+\usepackage{trimspaces}
+\usepackage{xstring}
+\usepackage{calligra}
+\usepackage[T1]{fontenc}
+\usepackage[bottom]{footmisc}
+%\usepackage{xpatch}
+\usepackage{imakeidx}
+\usepackage[linktoc=all, bookmarks=true, hidelinks]{hyperref}% linktocpage=true, (link on page num. only)
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{bookmark}
+\usepackage{lscape}
+\usepackage[paper=A4,pagesize]{typearea} % for changing page size with the document
+\usepackage{eqnalign}
+\usepackage[english]{nomencl}
+%=%
+\usepackage{graphicx}
+\usepackage{esint}
+%\usepackage{pslatex}
+\usepackage{mathptmx}
+\usepackage{graphics}
+\usepackage{cite}
+\usepackage{pgfplots}
+%\pgfplotsset{compat=1.17}
+\usepackage{setspace}
+
+\usepackage{multirow}
+\usepackage{longtable}
+%if somebody wants to use biblatex:
+%\usepackage[style=authoryear-ibid,backend=biber]{biblatex}
+%\bibitemsep 24pt
+% \usepackage{float}
+
+% ---------------------------------------------------------------------
+% Optional committee-revision markup. Two commands:
+%   \revadd{...}  red text  -- material added in response to the committee.
+%   \flaghl{...}  yellow highlight -- material that already existed and is
+%                 pointed out rather than rewritten (e.g. an already-present
+%                 definition the committee asked to see highlighted).
+% Both are meant to be stripped before the final bound copy. Rather than
+% hand-editing them out, pass \CLEANCOPY on the command line and both
+% render as plain text -- nothing in this file needs to change:
+%   pdflatex -jobname=EMU_Thesis_formatcheck "\def\CLEANCOPY{1}\input{EMU_Thesis.tex}"
+% If you never need this, ignore it -- \revadd{...} and \flaghl{...} are
+% just unused commands until you wrap something in them.
+% ---------------------------------------------------------------------
+\ifdefined\CLEANCOPY
+  \newcommand{\revadd}[1]{#1}
+  \newcommand{\flaghl}[1]{#1}
+\else
+  \newcommand{\revadd}[1]{\textcolor{red}{#1}}
+  \sethlcolor{yellow}
+  \newcommand{\flaghl}[1]{\hl{#1}}
+\fi
+
+
+%
+% Definitions for title and approval pages
+%
+\def\degree#1{\gdef\@degree{#1}}
+\def\program#1{\gdef\@program{#1}}
+\def\inof#1{\gdef\@inof{#1}}
+\def\Dept#1{\gdef\@Dept{#1}}
+\def\defenseyear#1{\gdef\@defenseyear{#1}}
+\def\defensemonth#1{\gdef\@defensemonth{#1}}
+\def\InstituteDirector#1{\gdef\@InstituteDirector{#1}}
+\def\DeptChair#1{\gdef\@DeptChair{#1}}
+% Title printed above \@DeptChair's name and \@Dept on the approval page.
+% Default matches a "Department" unit (Chair). Units organized as a
+% "School" (Director/Acting Director) should call, e.g.:
+%   \DeptChairTitle{Acting Director, School of}
+\def\DeptChairTitle#1{\gdef\@DeptChairTitle{#1}}
+\def\supervisor#1{\gdef\@supervisor{#1}}
+\def\cosuperi#1{\gdef\@cosuperi{#1}}
+%\def\cosuperii#1{\gdef\@cosuperii{#1}}
+%
+\global\let\@degree\empty
+\global\let\@program\empty
+\global\let\@inof\empty
+\global\let\@Dept\empty
+\global\let\@InstituteDirector\empty
+\global\let\@DeptChair\empty
+\gdef\@DeptChairTitle{Chair, Department of}
+\global\let\@supervisor\empty
+\global\let\@cosuperi\empty
+%\global\let\@cosuperii\empty
+\def\nyear{\number\year}
+\global\let\@defenseyear\nyear
+%
+% Other definitions
+%
+\xdef\@singlespaced{1}
+\xdef\@doublespaced{2}
+%
+\newlength{\insd}
+\newlength{\dc}
+\newlength{\dpt}
+\newlength{\spv}
+\newlength{\ei}
+\newlength{\csi}
+\newlength{\csii}
+\newlength{\eii}
+\newlength{\eiii}
+\newlength{\eiv}
+\newlength{\ev}
+\newlength{\evi}
+\newlength{\evii}
+\let\@app\empty
+\newcounter{thsfootcnt}
+
+\makenomenclature
+%\usepackage{afterpage}
+
+
+% ============== Bookmarks and hyperlinks ===================
+\bookmarksetup{
+  open,
+  openlevel=1,
+  numbered
+}
+
+\providecommand\phantomsection{} % for addcontentsline and hyperref
+% =========================================================
+
+
+\mathchardef\mhyphen="2D % Define a "math hyphen"
+
+% increase this a tad to discourage equation breaks
+\binoppenalty=1000 % default 700
+\relpenalty=800     % default 500
+
+% Macro for removing pre and post spaces from a given text
+\newcommand*{\trim}[1]{%
+  \trim@post@space{\trim@pre@space@noexp{#1}}%
+}
+
+% Theorems and definitions ===============================
+\newtheoremstyle{emuTheoremstyle} % name
+    {24pt}                       % Space above
+    {0pt}                        % Space below
+    {}                           % Body font
+    {}                           % Indent amount
+    {\bfseries}                  % Theorem head font
+    {:}                          % Punctuation after theorem head
+    {0.5em}                      % Space after theorem head
+    {\thmname{#1}\thmnumber{~#2}\thmnote{~(#3)}}  % Theorem head spec (can be left empty, meaning ‘normal’)
+
+\theoremstyle{emuTheoremstyle}
+\def\theoremnumbering{chapter}
+%\theoremstyle{definition}
+\newtheorem{remark}{Remark}[\theoremnumbering]
+\newtheorem{definition}{Definition}[\theoremnumbering]
+\newtheorem{proposition}{Proposition}[\theoremnumbering]
+\newtheorem{conjecture}{Conjecture}[\theoremnumbering]
+\newtheorem{example}{Example}[\theoremnumbering]
+\newtheorem{theorem}{Theorem}[\theoremnumbering]
+\newtheorem{lemma}{Lemma}[\theoremnumbering]
+\newtheorem{corollary}{Corollary}[\theoremnumbering]
+\newtheorem{hypothesis}{Hypothesis}[\theoremnumbering]
+%\renewcommand\thetheorem{\Alph{theorem}}
+
+
+% remove the space before the proof
+\renewenvironment{proof}[1][\proofname]{\par
+  \pushQED{\qed}%
+  \normalfont \topsep-25\p@\relax
+  \trivlist
+  \item[\hskip\labelsep\itshape\bfseries
+  #1\@addpunct{.}]\ignorespaces
+}{%
+  \popQED\endtrivlist\@endpefalse
+}
+
+%simplified version
+%\renewenvironment{proof}{\vspace{-24pt}\noindent\textit{Proof.}\begin{mdseries}}{\end{mdseries}}
+
+%\hypersetup{
+%    colorlinks=false,
+%    citecolor=black,
+%    linkcolor=black
+%}
+% =========================================================
+
+
+% Examining committee database ============================
+\DTLnewdb{examiner}
+\newcommand{\examiner}[3]{%
+    \DTLnewrow{examiner}%
+        \DTLnewdbentry{examiner}{Title}{#1}%
+        \DTLnewdbentry{examiner}{FirstName}{#2}%
+        \DTLnewdbentry{examiner}{Surname}{#3}%
+        %\DTLnewdbentry{examiner}{Title}{\trim{#1}}%
+        %\DTLnewdbentry{examiner}{FirstName}{\trim{#2}}%
+        %\DTLnewdbentry{examiner}{Surname}{\trim{#3}}%
+}%
+% Define necessary lengths
+\newlength{\examinerlinedefaultlength}
+\setlength{\examinerlinedefaultlength}{170.7168pt}
+\newlength{\examinerlinelength}
+\newlength{\examinermaxlength}
+\newlength{\examinernamelength}
+%
+
+% Examining Committee box generator for approval page
+\newcommand{\examinerlist}[1]{%
+    %\trimspaces{#1}
+    % 1. Find the max length of the examiner names
+    \setlength{\examinerlinelength}{10pt}
+    \setlength{\examinermaxlength}{10pt}
+    \DTLforeach{#1}{\etitle=Title,\fname=FirstName,\surname=Surname}
+            {
+              % remove starting spaces first
+              \DTLreplaceentryforrow{Title}{\trim{\etitle}}
+              \DTLreplaceentryforrow{FirstName}{\trim{\fname}}
+              \DTLreplaceentryforrow{Surname}{\trim{\surname}}
+              \dtlrecombine
+              
+              \settowidth{\examinernamelength}{\etitle~\fname~\surname}
+              \ifnumcomp{\examinernamelength}{>}{\examinermaxlength}
+                    {\settowidth{\examinermaxlength}{\etitle~\fname~\surname}}
+                    {}
+            }% 
+    % max available length in the examiner list is 398.33836pt or 14cm
+    \setlength{\examinerlinelength}{388.33836pt - \examinermaxlength} 
+    % if the new line length is more than the default reduce it to default
+    \ifnumcomp{\examinerlinelength}{>}{\examinerlinedefaultlength}
+                    {\setlength{\examinerlinelength}{170.7168pt}}
+                    {}
+    % 2. Print the lists
+    \DTLsort{Surname,FirstName}{#1}
+    \begin{enumerate}[leftmargin=*]
+        \setlength{\itemsep}{0pt}
+        \setlength{\parskip}{0pt}
+        \setlength{\parsep}{0pt}
+        \vspace{-14pt}
+        \DTLforeach*[\equal{\etitle}{Prof.}]{#1}{\etitle=Title,\fname=FirstName,\surname=Surname}
+            {\displayexaminer{Prof.}{\fname}{\surname}}%  
+        \DTLforeach*[\equal{\etitle}{Prof. Dr.}]{#1}{\etitle=Title,\fname=FirstName,\surname=Surname}
+            {\displayexaminer{Prof. Dr.}{\fname}{\surname}}%  
+        \DTLforeach*[\equal{\etitle}{Assoc. Prof. Dr.}]{#1}{\etitle=Title,\fname=FirstName,\surname=Surname}
+            {\displayexaminer{Assoc. Prof. Dr.}{\fname}{\surname}}%  
+        \DTLforeach*[\equal{\etitle}{Asst. Prof. Dr.}]{#1}{\etitle=Title,\fname=FirstName,\surname=Surname}
+            {\displayexaminer{Asst. Prof. Dr.}{\fname}{\surname}}%
+        \DTLforeach*[\equal{\etitle}{Assist. Prof. Dr.}]{#1}{\etitle=Title,\fname=FirstName,\surname=Surname}
+            {\displayexaminer{Asst. Prof. Dr.}{\fname}{\surname}}%
+        \DTLforeach*[\equal{\etitle}{Dr.}]{#1}{\etitle=Title,\fname=FirstName,\surname=Surname}
+            {\displayexaminer{Dr.}{\fname}{\surname}}%
+    \end{enumerate}
+}
+
+\newcommand{\displayexaminer}[3]{
+    { \if\relax\etitle\relax \else \item\space{\etitle~\fname~\surname~}
+       \hspace{\fill}\makebox[\examinerlinelength] \hrulefill \\ \vspace{-26pt} \fi}%
+}
+
+
+
+%\newcommand*{\getlength}[1]{\strip@pt#1}
+
+% Signature box generator for approval page
+\usepackage{multicol}
+\setlength{\columnsep}{1cm}
+\newcommand{\signaturelinelength}{18em}
+\newcommand{\signaturelinelengthC}{16em}
+\newcommand{\signaturebox}[4]{
+  \if\relax#3\relax
+    \begin{flushright}
+        \begin{minipage}{\signaturelinelength}
+          \centering{
+            \rule{\signaturelinelength}{0.4pt}
+            {#1}\\
+            {#2}}
+        \end{minipage}
+    \end{flushright}
+  \else
+  \begin{multicols}{2}
+        \begin{flushleft}
+            \begin{minipage}{\signaturelinelengthC}
+              \centering{
+                \rule{\signaturelinelengthC}{0.4pt}
+                {#3}\\
+                {#4}}
+            \end{minipage}
+        \end{flushleft} 
+        \begin{flushright}
+            \begin{minipage}{\signaturelinelengthC}
+              \centering{
+                \rule{\signaturelinelengthC}{0.4pt}
+                {#1}\\
+                {#2}}
+            \end{minipage}%
+        \end{flushright}
+    \end{multicols}
+  \fi
+}
+% ==============================================================
+
+
+%
+% Title page
+%
+\newcommand\uptitle{
+  \ifx\@degree\empty \@@warning{No \string\degree\space given} \fi
+  \null
+  \vspace*{-28pt} %headsep = 0.345in
+  %\hspace*{0.4006in} %oddside = 0.1794in
+  \let\baselinestretch\@singlespaced{\baselineskip0.70\baselineskip\fontsize{18pt}{1}{\textbf{\@title}} \\%
+  \vspace*{\fill}
+  \fontsize{16}{1}{\textbf{\@author}} \\
+  \vspace*{\fill}
+  \large{Submitted to the\\Institute of Graduate Studies and Research\\
+  in partial fulfillment of the requirements for the degree of} \\}}
+%
+\newcommand\downtitle{
+\vspace*{\fill}
+%\vskip 2\baselineskip
+\let\baselinestretch\@singlespaced{
+  \large{Eastern Mediterranean University} \\ \large{\@defensemonth} \large{\@defenseyear}}\\ \large{Gazima\u{g}usa, North Cyprus}
+  \null}
+%
+\newcommand\relaxtitlestuff{
+  \setcounter{footnote}{0}%
+  \global\let\thanks\relax
+  \global\let\maketitle\relax
+  \global\let\@thanks\@empty
+  \global\let\@author\@empty
+  \global\let\@date\@empty
+  \global\let\author\relax
+  \global\let\date\relax
+  \global\let\and\relax}
+%
+\newcommand\makemstitle{\begin{titlepage}
+   \let\baselinestretch\@singlespaced{
+   \begin{center}
+   \uptitle
+   \vspace*{\fill}
+   \large{\@degree \\ \@inof \\ \@program \\}
+   \downtitle
+   \end{center}}
+   \end{titlepage}
+   \relaxtitlestuff}
+%
+\newcommand\makethesistitle{\begin{titlepage}
+   \let\baselinestretch\@singlespaced{
+   \begin{center}
+   \uptitle
+    \vspace*{\fill}
+    \large{\@degree \\ \@inof \\ \@program \\}
+   \downtitle
+   \vspace{-20pt}
+   \end{center}}
+   \end{titlepage}
+   \relaxtitlestuff}
+
+%
+% Approval page
+%
+\newcommand\makeapprovalpage{%
+ \addtocounter{page}{1}
+ \thispagestyle{empty}
+  \settowidth{\insd}{\@InstituteDirector}
+  \settowidth{\dc}{\@DeptChair}
+  \settowidth{\dpt}{\@Dept}
+  \settowidth{\spv}{\@supervisor}
+  \settowidth{\csi}{\@cosuperi}
+  %\settowidth{\csii}{\@cosuperii}
+  \ifdim\csi>\spv \spv\ei \fi
+  \ifdim\csii>\spv \spv\ei \fi
+  \ifdim\ei>\spv \spv\ei \fi
+  \ifdim\eii>\spv \spv\eii \fi
+  \ifdim\eiii>\spv \spv\eiii \fi
+  \ifdim\eiv>\spv \spv\eiv \fi
+  \ifdim\ev>\spv \spv\ev \fi
+  \ifdim\evi>\spv \spv\evi \fi
+  \ifdim\evii>\spv \spv\evii \fi
+  \vspace*{-38pt} %headsep = 0.345in
+  \begin{singlespace}
+  %Approval of the Institute of Graduate Studies and Research for the thesis report titled "\thetitle" by \theauthor. \par
+  Approval of the Institute of Graduate Studies and Research \par
+  \vspace*{\fill}
+  \signaturebox{\@InstituteDirector}{Director}{} \par %{Acting Director}
+  \vspace*{\fill}
+  I certify that this thesis satisfies all the requirements as a thesis for the degree of \@degree\space\@inof\space\@program.\par
+  \vspace*{\fill}
+  \signaturebox{\@DeptChair}{\@DeptChairTitle\space\@Dept}{} \par
+  \vspace{\fill}
+  We certify that we have read this thesis and that in our opinion it is fully adequate in scope and quality as a thesis for the degree of \@degree\space\@inof\space\@program. \par
+  \vspace{\fill}
+  \signaturebox{\@supervisor}{Supervisor}{\@cosuperi}{Co-Supervisor} \par
+  \vspace{\fill}
+  \begin{flushright}
+    Examining Committee
+    \hrule
+  \end{flushright}
+  \end{singlespace}
+  \vspace{-2pt}
+  \examinerlist{examiner}
+    
+  %\global\let\@title\@empty
+  %\global\let\title\relax
+  \global\let\@supervisor\@empty
+  \global\let\supervisor\relax
+  \global\let\@cosuperi\@empty
+  \global\let\cosuperi\relax
+  %\global\let\@cosuperii\@empty
+  %\global\let\cosuperii\relax
+}
+%
+% Abstract, Acknowledgements, Ozet, etc.
+
+
+%************************* ABSTRACT TITLE ***********************
+\renewenvironment{abstract}{\chapter*{\abstractname}}
+   {\par\vfill\null}
+%************************* OZ TITLE *****************************
+\newenvironment{ozet}{\chapter*{\ozetname}}
+   {\par\vfill\null}
+%************************* Dedication TITLE *********************
+\newenvironment{dedication}{\chapter*{\dedname}}
+   {\par\vfill\null}
+%************************* Invisible Dedication *****************
+\newenvironment{notitlededication}{\chapter*{\invisdedname}}
+   {\par\vfill\null}
+%************************* Acknowledgements TITLE ***************
+\newenvironment{acknowledgements}{\chapter*{\ackname}}
+   {\par\vfill\null}  
+%************************* Preface TITLE ************************
+\newenvironment{preface}{\chapter*{\prefacename}}
+   {\par\vfill\null}
+%************************* Foreword TITLE ***********************
+\newenvironment{foreword}{\chapter*{\forewordname}}
+   {\par\vfill\null}
+%************************* Symbols and Abbreviation TITLE ******
+% Define a convenient command to add a line
+% to the the database
+
+% symbols database
+\newcommand*{\addsymbol}[3][a]{%
+  \DTLnewrow{symbols}%
+  \DTLnewdbentry{symbols}{Acronym}{\makebox[0pt][l]{\phantom{#1}}#2}%
+  \DTLnewdbentry{symbols}{Description}{#3}%
+}
+
+% abbreviations database
+\newcommand*{\addabbreviation}[3][a]{%
+  \DTLnewrow{abbreviation}%
+  \DTLnewdbentry{abbreviation}{Acronym}{\makebox[0pt][l]{\phantom{#1}}#2}%
+  \DTLnewdbentry{abbreviation}{Description}{#3}%
+}
+
+% formatting list
+\newenvironment{symbols}{
+   \clearpage
+   \chapter*{\listsymbolname}
+   \vspace*{0pt}
+   \beginsymbollist
+   }{\closesymlist}
+\newenvironment{abbreviations}{
+   \clearpage
+   \chapter*{\listabbrname}
+   \vspace*{0pt}
+   \beginabbrlist
+   }{\closesymlist}
+\newenvironment{symbolsandabbreviations}{
+   \clearpage
+   \chapter*{\listsymbolandabbrname}
+   \vspace*{0pt}
+   \beginsymbollist
+   \closesymlist
+   \noskip\noskip %remove the space between 2 lists
+   \beginabbrlist
+   }{\closesymlist}
+
+% create the list of symbols and/or abbreviations   
+\newcommand{\abbrlabel}[1]{\makebox[3cm][l]{#1\hfill}}
+\newcommand{\beginsymbollist}{%
+    % Remove preceding white spaces
+    \DTLforeach{symbols}{\thisAcronym=Acronym,\thisDesc=Description}%
+        {\DTLreplaceentryforrow{Acronym}{\trim{\thisAcronym}}}%
+    \begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}%
+     \setlength{\labelwidth}{3cm}\setlength{\leftmargin}{3.2cm}%
+     \setlength{\itemsep}{-5pt}}
+    \DTLforeach*{symbols}{\thisAcronym=Acronym,\thisDesc=Description}%
+    {\item[\thisAcronym] \thisDesc}%
+}
+\newcommand{\beginabbrlist}{%
+    % Remove preceding white spaces
+    \DTLforeach{abbreviation}{\thisAcronym=Acronym,\thisDesc=Description}%
+        {\DTLreplaceentryforrow{Acronym}{\trim{\thisAcronym}}}%
+    \begin{list}{}{\renewcommand{\makelabel}{\abbrlabel}%
+     \setlength{\labelwidth}{3cm}\setlength{\leftmargin}{3.2cm}%
+     \setlength{\itemsep}{-5pt}}
+    \DTLforeach*{abbreviation}{\thisAcronym=Acronym,\thisDesc=Description}%
+    {\item[\thisAcronym] \thisDesc}%
+}
+\newcommand{\closesymlist}{\end{list}}
+
+%................... Symbols TITLE (using nomencl)....................
+\renewcommand{\nomname}{LIST OF SYMBOLS AND ABBREVIATIONS}
+\renewcommand{\nompreamble}{\vspace{0pt}}
+\renewcommand{\nomlabelwidth}{3cm}
+\setlength{\nomitemsep}{-\parsep}
+
+
+%************************* Symbols TITLE (old) ***********************
+%\newenvironment{symbols}{%
+%   \clearpage
+%   \chapter*{\listsymbolname}
+%   \beginsymlist}
+%  {\closesymlist}
+  
+%\newcommand{\beginsymlist}{%
+%   \begin{tabbing}
+%   \hspace{-12pt}\hspace*{\symtabi}\=\hspace*{\symtabii}\=\kill}
+
+%\newcommand{\closesymlist}{\end{tabbing}}
+
+%\newcommand{\sym}[2]{\>#1 \>#2 \\}
+%\newlength{\symtabi}
+%\newlength{\symtabii}
+%\setlength{\symtabi}{1em}
+%\setlength{\symtabii}{10em}
+%
+
+
+%\long\def\chaptervc#1{\clearpage \vfill\chapter*{#1}\vfill\clearpage}
+%\long\def\appendixsec#1{\clearpage \section{#1}}
+%************************* APPENDIX TITLE **********************
+\renewenvironment{appendix}{\chapter*{\appendixname}}
+   {\par\vfill\null}
+%************************* APPENDICES TITLE **********************
+\newenvironment{appendices}{\chapter*{\appendicesname}}
+   {\par\vfill\null}
+
+\renewcommand\abstractname{ABSTRACT}
+\newcommand\ozetname{\"OZ}
+\newcommand\dedname{DEDICATION\hskip0pt}
+\newcommand\invisdedname{DEDICATION}
+\newcommand\ackname{ACKNOWLEDGMENTS}
+\newcommand\prefacename{PREFACE}
+\newcommand{\listsymbolname}{LIST OF SYMBOLS}
+\newcommand{\listabbrname}{LIST OF ABBREVIATIONS}
+\newcommand{\listsymbolandabbrname}{LIST OF SYMBOLS AND ABBREVIATIONS}
+\newcommand\forewordname{FOREWORD}
+\renewcommand\indexname{INDEX}
+\renewcommand\partname{PART}
+\renewcommand\appendixname{APPENDIX}
+\newcommand\appendicesname{APPENDICES}
+%
+% =========================== Sectional Units ======================
+%
+\renewcommand\chapter{\clearpage
+                    \global\@topnum\z@
+                    \@afterindenttrue
+                    \secdef\@chapter\@schapter}
+%
+\renewcommand\@makechapterhead[1]{\begin{center}
+  {\fontsize{16}{1}
+    \ifnum \c@secnumdepth >\m@ne
+    \ifx\@app\empty
+        \bfseries Chapter \hspace{0.4ex}\arabic{chapter} \\
+        \vspace*{24pt}
+        
+    \else
+        \vspace*{-2cm}\fontsize{16}{1}\bfseries \appendixname\ \thechapter\hspace{1ex}
+    \fi
+    \fi
+    
+    \interlinepenalty\@M
+    \fontsize{16}{1}{#1}\bfseries\setstretch{2.5}\par\nobreak
+    \vskip 30pt
+  }
+  \end{center}}
+  
+%
+\renewcommand\@makeschapterhead[1]
+  {\begin{center}{ 
+    \normalfont
+    \interlinepenalty\@M
+    \ifx#1\invisdedname
+        \fontsize{16}{1}\bfseries\phantom{#1}\par\nobreak
+    \else
+        \fontsize{16}{1}\bfseries#1\par\nobreak
+    \fi
+    \vspace*{-6pt}}
+  \end{center}}
+%
+
+\def\@chapter[#1]#2{\ifnum \c@secnumdepth >\m@ne
+                      \refstepcounter{chapter}%
+                      \typeout{\@chapapp\space\thechapter.}%
+                      \ifx\@app\empty
+                        \phantomsection
+                        \addcontentsline{toc}{chapter}%
+                            {\protect\numberline{\chaptocapp}#1}%
+                      \else
+                        \addtocontents{toc}{%
+                        \noindent
+                        \appendixname\ \thechapter\hspace{1.0ex}#1
+                        \nobreak\leaders
+                        \hbox{$\m@th \mkern \@dotsep mu.\mkern
+                              \@dotsep mu$}
+                        \hfill \nobreak
+                        \hb@xt@\@pnumwidth{\hss \thepage}\par}
+                      \fi
+                    \else
+                      \phantomsection
+                      \addcontentsline{toc}{chapter}{#1}%
+                    \fi
+                    \chaptermark{#1}%
+                      \@makechapterhead{\uppercase{#2}}%
+                      \@afterheading
+                   }
+\renewcommand\@schapter[1]{\phantomsection
+                           \addcontentsline{toc}{chapter}{#1}%
+     \@makeschapterhead{#1} \@afterheading}
+%
+\def\chaptocapp{\thechapter}
+%
+%\renewcommand\section{\@startsection {section}{1}{\z@}%
+%                                    {0pt} %{-3.5ex \@plus -1ex \@minus -.2ex}%
+%                                    {1pt} %{2.3ex \@plus.2ex}%
+%                                    {\fontsize{14}{1}\bfseries}}%\raggedright
+%\renewcommand\subsection{\@startsection{subsection}{2}{\z@}%
+%                                    {0pt}%{-3.25ex\@plus -1ex \@minus -.2ex}%
+%                                    {1pt}%{1.5ex \@plus .2ex}%
+%                                     {\bfseries\small}}
+%\renewcommand\subsubsection[1]{\@startsection{subsubsection}{3}{\z@}%
+%                                     {0pt}%{-3.25ex\@plus -1ex \@minus -.2ex}%
+%                                     {1pt}%
+%                                     {-3.25ex\@plus -1ex \@minus -.2ex}%
+%                                     {-1em}%
+%                                     {\bfseries\small}[#1]{{#1}}}%
+
+\beforetitleunit=-22pt
+\aftertitleunit=-24pt
+
+% use \nostruts to remove unwanted vertical space at the beginning of a page.
+\titleformat{\section}[block]
+{\nostruts\normalfont%\filcenter%
+    \fontsize{14}{14} %\Large 
+     \bfseries}
+{\thesection}{0.5em}{}[]
+\titlespacing{\section}{0pt}{*1}{*1}
+\titlespacing*{name=\section,numberless}{0pt}{0pt}{*1}
+
+\titleformat{\subsection}[block]
+{\nostruts\normalfont%\filcenter%
+    \fontsize{12}{14} %\Large 
+     \bfseries}
+{\thesubsection}{0.5em}{}[]
+\titlespacing{\subsection}{0pt}{*1}{*1}
+\titlespacing*{name=\subsection,numberless}{0pt}{0pt}{*1}
+
+\titleformat{\subsubsection}[block]
+{\nostruts\normalfont%\filcenter%
+    \fontsize{12}{14} %\Large 
+     \bfseries}
+{\thesubsubsection}{0.5em}{}[]
+\titlespacing{\subsubsection}{0pt}{*1}{*1}
+\titlespacing*{name=\subsubsection,numberless}{0pt}{0pt}{*1}
+
+
+% ======================== Creating new section for Appendices ======
+% Need to fix ToC first
+\newlistentry[chapter]{appndxsec}{toc}{2}
+\cftsetindents{appndxsec}{0.8em}{0em}
+\renewcommand{\cftbeforeappndxsecskip}{0em}%Appendix\hspace{0.8em}
+\renewcommand{\cftappndxsecpresnum}{Appendix~}
+\renewcommand{\cftappndxsecaftersnumb}{:\hspace{0.3em}}
+
+% Define new appendix sections
+%\newcounter{appndxsec} % no need for counter (handled by tocloft)
+\titleclass{\appndxsec}{straight}[\chapter]
+\titleformat{\appndxsec}[block]
+  {\nostruts\normalfont\fontsize{14}{14}\bfseries}{Appendix~\theappndxsec:}{0.5em}{}[]
+\titlespacing{\appndxsec}{0pt}{*1}{*1}
+\renewcommand{\theappndxsec}{\Alph{appndxsec}}
+\let\newappndxsec\appndxsec
+\renewcommand\appndxsec{\clearpage\newappndxsec}
+%\counterwithin{chapter}{appndxsec}
+
+% === old ===
+%\contentsmargin{1em}
+%\titlecontents{appndxsec}[0.8em]{}{\def\numberline##1{% >>> CRUDE HACK <<<
+%    Appendix~##1:~}}
+    %Appendix\hspace{1em}\contentslabel{0.7em}:~}%old hack
+%    {}
+%    {\titlerule*[0.39pc]{.}\contentspage}[]
+%\dottedcontents{appndxsec}[6.3em]{}{5.5em}{.4pc}
+% ==================================================================
+
+
+% ======Space before and after captions for tables and figures =====
+\floatsep 42pt %space left between floats (12.0pt plus 2.0pt minus 2.0pt).
+\textfloatsep 42pt %space between last top float or first bottom float and the text (20.0pt plus 2.0pt minus 4.0pt).
+\intextsep 42pt  %space left on top and bottom of an in-text float (12.0pt plus 2.0pt minus 2.0pt).
+\setlength{\abovecaptionskip}{0.1pt} 
+
+% for forcing tables and figure to be on top of otherwise empty page
+\setlength\@fptop{0\p@}
+% for the space between floats in pages with no text
+\setlength\@fpsep{42\p@}
+
+%\dbltextfloatsep %is \textfloatsep for 2 column output (20.0pt plus 2.0pt minus 4.0pt).
+%\dblfloatsep %is \floatsep for 2 column output (12.0pt plus 2.0pt minus 2.0pt).
+%\abovecaptionskip %space above caption (10.0pt).
+%\belowcaptionskip %space below caption (0.0pt).
+% ==================================================================
+
+% Orphan control for section titles
+\usepackage{needspace}
+\Needspace*{4\baselineskip} % at least two paragraph lines after the section title
+
+% ==================================================================
+
+\renewcommand\paragraph{\@startsection{paragraph}{4}{\z@}%
+                                    {3.25ex \@plus1ex \@minus.2ex}%
+                                    {-1em}%
+                                    {\normalfont\normalsize\itshape}}
+%
+% There should not be a period after the section number.
+\def\noenddot \@sect#1#2#3#4#5#6[#7]#8{\ifnum #2>\c@secnumdepth
+   \let\@svsec\@empty\else
+   \refstepcounter{#1}
+   \ifnum#2=3
+     \edef\@svsec{\underbar{\csname the#1\endcsname.\hskip 0.5em}}
+     \else
+     \edef\@svsec{\csname the#1\endcsname.\hskip 0.5em}\fi
+   \fi
+   \@tempskipa #5\relax
+   \ifdim \@tempskipa>\z@
+      \begingroup #6\relax
+         \@hangfrom{\hskip #3\relax\@svsec}{\interlinepenalty \@M #8\par}%
+      \endgroup
+      \csname #1mark\endcsname{#7}
+      \phantomsection\addcontentsline{toc}{#1}
+         {\ifnum #2>\c@secnumdepth
+          \else \protect\numberline{\csname the#1\endcsname.}
+          \fi
+          #7}
+   \else
+      \def\@svsechd{#6\hskip #3\relax  %% \relax added 2 May 90
+         \@svsec #8\ifnum #2>\c@secnumdepth.\fi
+         \csname #1mark\endcsname{#7}
+         \phantomsection\addcontentsline{toc}{#1}
+           {\ifnum #2>\c@secnumdepth
+            \else \protect\numberline{\csname the#1\endcsname.}
+            \fi
+         #7}}
+   \fi
+   \@xsect{#5}}
+
+%
+% First paragraf of a section should be indented
+%\def\@startsection#1#2#3#4#5#6{\if@noskipsec \leavevmode \fi
+%   \par \@tempskipa #4\relax
+%   \@afterindenttrue
+%   \ifdim \@tempskipa <\z@ \@tempskipa -\@tempskipa \fi
+%   \if@nobreak \everypar{}\else
+%     \addpenalty{\@secpenalty}\addvspace{\@tempskipa}\fi \@ifstar
+%     {\@ssect{#3}{#4}{#5}{#6}}{\@dblarg{\@sect{#1}{#2}{#3}{#4}{#5}{#6}}}}
+%
+% ======================================================================
+% Figures and Tables
+%
+\renewcommand\listfigurename{LIST OF FIGURES}
+\renewcommand\listtablename{LIST OF TABLES}
+\renewcommand\figurename{Figure}
+\renewcommand\tablename{Table}
+%
+%
+%
+%########################### Table of Contents#########################
+%
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+
+\renewcommand{\contentsname}{\clearpage
+                             \pdfbookmark[chapter]{TABLE OF CONTENTS}{toc}
+                             \begin{center} 
+                                \fontsize{16pt}{17pt} \textbf{TABLE OF CONTENTS} 
+                             \end{center}}
+\renewcommand{\cftbeforetoctitleskip}{-56pt}
+\renewcommand{\cftaftertoctitleskip}{18pt}
+\renewcommand\cftchapfont{\mdseries}
+\renewcommand\cftchappagefont{\mdseries}
+\renewcommand\cftdotsep{1}
+\renewcommand\cftchappagefont{\mdseries}
+\renewcommand\cftdotsep{1}
+\renewcommand{\cftpartleader}{\cftdotfill{\cftdotsep}} % for parts
+\renewcommand{\cftchapleader}{\cftdotfill{\cftdotsep}} % for chapters
+\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}} % for sections
+\renewcommand{\cftbeforechapskip}{0em}
+\renewcommand{\cftparskip}{0pt}
+%indent for chapter
+%\cftsetindents{chapter}{0em}{0.8em}
+%indent for subsection
+%\cftsetindents{subsection}{2.5em}{2.4em} 
+\setlength{\cftsecnumwidth}{0.8em} %space after number and section
+%\setlength{\cftchapnumwidth}{0em} %space after number and chapter
+% Set formatting for the LoF and LoT (fig/tab numbers >999 will clip caption)
+
+% redefine the fixed length box in tocloft to be dynamic length
+\newcommand{\cftlotnumberline}[1]{\@cftbsnum #1\@cftasnum\@cftasnumb}
+\let\numberline\cftlotnumberline
+
+\newlength{\mylen}
+% space required to print 
+\settowidth{\mylen}{\cftsecpresnum} 
+\cftfigpresnum
+% plus space for the number
+\addtolength{\mylen}{\cftsecnumwidth} 
+% Remove caption indent, and flush entries with title
+\cftsetindents{chapter}{0em}{0em} 
+\cftsetindents{section}{0.8em}{0em} 
+\cftsetindents{subsection}{2.5em}{0em} 
+\cftsetindents{subsubsection}{5em}{0em} 
+% add space after the zero-spaced number
+\renewcommand{\cftchapaftersnumb}{\hspace{0.3em}} 
+\renewcommand{\cftsecaftersnumb}{\hspace{0.3em}} 
+\renewcommand{\cftsubsecaftersnumb}{\hspace{0.3em}} 
+\renewcommand{\cftsubsubsecaftersnumb}{\hspace{0.3em}} 
+% Add small gap between LoF entries
+%\setlength{\cftbeforefigskip}{0.23\baselineskip} 
+\renewcommand{\cftbeforesecskip}{0em}
+% \patchcmd{<cmd>}{<search>}{<replace>}{<success>}{<failure>}
+\patchcmd{\l@chapter}{#1}{\uppercase{#1}}{}{}% Chapters use UPPERCASE in ToC
+
+
+% ==================== List of Tables and Figures ======================
+
+%\newlength{\tablelen}
+% ===============  Set formatting for LoT
+\renewcommand{\listtablename}{\chapter*{LIST OF TABLES}}
+%\renewcommand{\cftbeforelottitleskip}{-61pt}
+\renewcommand{\cftafterlottitleskip}{24pt}
+\renewcommand{\cfttabpresnum}{Table\hspace{0.3em}}
+\renewcommand{\cfttabaftersnum}{:}
+%\settowidth{\tablelen}{\cfttabpresnum} % space required to print \cftfigpresnum
+%\addtolength{\tablelen}{\cfttabnumwidth} % plus space for the number
+\cftsetindents{tab}{0pt}{0pt} % Remove caption indent, and flush entries with title
+\renewcommand{\cfttabaftersnumb}{\hspace{0.3em}} % add space after the zero-spaced number
+%\setlength{\cftbeforefigskip}{0.23\baselineskip} % Add small gap between LoT entries
+\renewcommand{\cftbeforetabskip}{0em}
+
+%\newlength{\figurelen}
+% =============== Set formatting for LoF
+\renewcommand{\listfigurename}{\chapter*{LIST OF FIGURES}}
+%\renewcommand{\cftbeforeloftitleskip}{-61pt}
+\renewcommand{\cftafterloftitleskip}{24pt}
+\renewcommand{\cftfigpresnum}{Figure\hspace{0.3em}}
+\renewcommand{\cftfigaftersnum}{:}
+%\settowidth{\figurelen}{\cftfigpresnum} % space required to print \cftfigpresnum
+%\addtolength{\figurelen}{\cftfignumwidth} % plus space for the number
+\cftsetindents{figure}{0pt}{0pt} % Remove caption indent, and flush entries with title
+\renewcommand{\cftfigaftersnumb}{\hspace{0.3em}} % add space after the zero-spaced number
+%\setlength{\cftbeforefigskip}{0.23\baselineskip} % Add small gap between LoF entries
+\renewcommand{\cftbeforefigskip}{0em}
+
+\renewcommand\@tocrmarg{0em} % versus 2.55em
+
+%##################### Table of Contents (end)######################
+
+% ======================== Lists ==========================
+% using enumitem package
+\setlist{topsep = 0pt,%
+         partopsep = 0pt,%
+         itemsep = 0pt,%
+         parsep = 0pt}%
+         
+
+% using custom environemtns (old)         
+%\newenvironment{EMUitemize}
+% {\begin{itemize}\ifnum \@listdepth=1\vspace{-10pt}\else\vspace{-2pt}\fi
+%    \setlength{\itemsep}{0pt}
+%    \setlength{\parskip}{0pt}
+%    \setlength{\parsep}{0pt}}
+% {\end{itemize}\ifnum \@listdepth=0\vspace{-10pt}\else\vspace{-2pt}\fi}
+ 
+%\newenvironment{EMUenumerate}
+% {\begin{enumerate}\ifnum \@listdepth=1\vspace{-10pt}\else\vspace{-2pt}\fi
+%    \setlength{\itemsep}{0pt}
+%    \setlength{\parskip}{0pt}
+%    \setlength{\parsep}{0pt}}
+% {\end{enumerate}\ifnum \@listdepth=0\vspace{-10pt}\else\vspace{-2pt}\fi}
+% ======================== end Lists ==========================
+
+
+
+%
+% Appendix
+%
+%\renewcommand\appendix{\par
+%  \setcounter{chapter}{0}%
+%  \setcounter{section}{0}%
+%  \setcounter{table}{0}%
+%  \setcounter{figure}{0}%
+%  \counterwithin{table}{appndxsec}
+%  \counterwithin{figure}{appndxsec}
+  %\renewcommand\@chapapp{\appendixname}
+  %\renewcommand\thechapter{\Alph{chapter}}%
+%    \titleformat{\appendixsec}[block]
+%    {\normalfont%\filcenter%
+%        \fontsize{14}{16} %\Large 
+%         \bfseries}
+%    {\thesection}{0.5em}{}
+%    \titlespacing{\appendixsec}{0pt}{-24pt}{-24pt}
+  %\renewcommand*{\thesection}{\Alph{section}}%
+%  \let\@app1
+%}
+
+\newcommand{\appendicescounter}{
+    \setcounter{chapter}{0}%
+    \setcounter{section}{0}%
+    \setcounter{table}{0}%
+    \setcounter{figure}{0}%
+    \setcounter{equation}{0}%
+    \counterwithin{table}{appndxsec}
+    \counterwithin{figure}{appndxsec}
+    \counterwithin{equation}{appndxsec}
+    \counterwithin{remark}{appndxsec}
+    \counterwithin{definition}{appndxsec}
+    \counterwithin{proposition}{appndxsec}
+    \counterwithin{conjecture}{appndxsec}
+    \counterwithin{example}{appndxsec}
+    \counterwithin{theorem}{appndxsec}
+    \counterwithin{lemma}{appndxsec}
+    \counterwithin{corollary}{appndxsec}
+    \counterwithin{hypothesis}{appndxsec}
+    \renewcommand{\theequation}{\theappndxsec.\arabic{equation}}
+    \renewcommand{\theremark}{\theappndxsec.\arabic{remark}}
+    \renewcommand{\thedefinition}{\theappndxsec.\arabic{definition}}
+    \renewcommand{\theproposition}{\theproposition.\arabic{proposition}}
+    \renewcommand{\theconjecture}{\theappndxsec.\arabic{conjecture}}
+    \renewcommand{\theexample}{\theappndxsec.\arabic{example}}
+    \renewcommand{\thetheorem}{\theappndxsec.\arabic{theorem}}
+    \renewcommand{\thelemma}{\theappndxsec.\arabic{lemma}}
+    \renewcommand{\thecorollary}{\theappndxsec.\arabic{corollary}}
+    \renewcommand{\thehypothesis}{\theappndxsec.\arabic{hypothesis}}
+}
+
+\newcommand{\appendixcounter}{
+    \setcounter{chapter}{0}%
+    \setcounter{section}{0}%
+    \setcounter{table}{0}%
+    \setcounter{figure}{0}%
+    \setcounter{equation}{0}
+    \setcounter{remark}{0}
+    \setcounter{definition}{0}
+    \setcounter{proposition}{0}
+    \setcounter{conjecture}{0}
+    \setcounter{example}{0}
+    \setcounter{theorem}{0}
+    \setcounter{lemma}{0}
+    \setcounter{corollary}{0}
+    \setcounter{hypothesis}{0}
+    \renewcommand\thetable{A.\arabic{table}}
+    \renewcommand\thefigure{A.\arabic{figure}}
+    \renewcommand{\theequation}{A.\arabic{equation}}
+    \renewcommand{\theremark}{A.\arabic{remark}}
+    \renewcommand{\thedefinition}{A.\arabic{definition}}
+    \renewcommand{\theproposition}{A.\arabic{proposition}}
+    \renewcommand{\theconjecture}{A.\arabic{conjecture}}
+    \renewcommand{\theexample}{A.\arabic{example}}
+    \renewcommand{\thetheorem}{A.\arabic{theorem}}
+    \renewcommand{\thelemma}{A.\arabic{lemma}}
+    \renewcommand{\thecorollary}{A.\arabic{corollary}}
+    \renewcommand{\thehypothesis}{A.\arabic{hypothesis}}
+    %\counterwithin{table}{chapter}
+    %\counterwithin{figure}{chapter}
+    %\renewcommand\thechapter{\Alph{chapter}}%
+}
+
+\renewenvironment{appendices}{%
+   \clearpage
+   \appendicescounter
+   \begin{center}
+       \vspace*{\fill}
+       \phantomsection\addcontentsline{toc}{chapter}{APPENDICES}
+       \bfseries\fontsize{16}{1}\selectfont APPENDICES
+       \vspace*{\fill}
+   \end{center}
+   %\clearpage
+   }
+  {}
+
+\renewenvironment{appendix}{%
+   \clearpage
+   \appendixcounter
+   %\appendix
+   \begin{center}
+       \vspace*{\fill}
+       \phantomsection\addcontentsline{toc}{chapter}{APPENDIX}
+       \bfseries\fontsize{16}{1}\selectfont APPENDIX
+       \vspace*{\fill}
+   \end{center}
+   \clearpage
+   }
+  {}
+  
+
+% ================ INDEX =============================
+\makeindex[columns=2, title=\texorpdfstring{\vspace*{11.5cm}I}INDEX, options= -s EMU_Index, intoc=false]
+%\AtEndEnvironment{theindex}{\clearpage}
+% ===================================================
+
+%
+% References
+%
+%\def\@biblabel#1{#1.} % This removes the square brackets AH
+%
+\newenvironment{harvardbibliography}{\chapter*{\bibname}%
+     \begin{list}{}{\topsep0pt \leftmargin2em \rightmargin0pt
+     \itemindent-2em \itemsep\parskip\parsep0pt}}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `harvardbibliography' environment}}
+      \end{list}}
+%
+\newenvironment{bibnotcited}[1]{\chapter*{\bibncname}%
+      \list{\@biblabel{\@arabic\c@enumiv}}%
+           {\settowidth\labelwidth{\@biblabel{#1}}%
+            \leftmargin\labelwidth
+            \advance\leftmargin\labelsep
+            \@openbib@code
+            \usecounter{enumiv}%
+            \let\p@enumiv\@empty
+            \renewcommand\theenumiv{\@arabic\c@enumiv}}%
+      \sloppy
+      \clubpenalty4000
+      \@clubpenalty \clubpenalty
+      \widowpenalty4000%
+      \sfcode`\.\@m}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `bibnotcited' environment}}%
+      \endlist}
+%
+\newenvironment{harvardbibnotcited}{\chapter*{\bibncname}%
+     \begin{list}{}{\topsep0pt \leftmargin2em \rightmargin0pt
+     \itemindent-2em \itemsep\parskip \parsep0pt}}
+     {\def\@noitemerr
+       {\@latex@warning{Empty `harvardbibnotcited' environment}}%
+     \end{list}}
+\renewcommand{\bibname}{REFERENCES}
+\newcommand{\bibncname}{REFERENCES NOT CITED}
+
+% add 24pt after each reference
+\let\oldbibliography\thebibliography
+\renewcommand{\thebibliography}[1]{%
+  \oldbibliography{#1}%
+  \vspace{0pt} % it is required to be here
+  \setlength{\itemsep}{24pt}%
+}
+
+
+% ======================================================
+% Footnotes are numbered consecutively throughout the
+% whole thesis and single line-spacing is invoked
+%
+\def\footnote#1{%
+   \@ifnextchar[{\@xfootnote}{%
+\setcounter{footnote}{\value{thsfootcnt}}%
+\addtocounter{thsfootcnt}{1}%
+   \stepcounter{\@mpfn}%
+     \begingroup\let\protect\noexpand
+       \xdef\@thefnmark{\thempfn}\endgroup
+\let\baselinestretch\@singlespaced
+     \@footnotemark\@footnotetext{#1}
+\let\baselinestretch\@doublespaced}
+}
+
+\renewcommand\@makefntext[1]{%
+\setlength\parindent{0em}%
+\noindent%
+\mbox{\@footnotemark~}{#1}\vspace{10pt}}
+
+%\setlength{\footnotesep}{20pt}
+\setlength{\skip\footins}{14pt}
+%\setlength{\footskip}{0pt}
+
+\interfootnotelinepenalty=\@M
+
+
+%\@addtoreset{footnote}{section}
+% ======================================================
+%
+% Single line spacing is required in in quotations
+%
+\renewenvironment{quotation}{%
+     \vskip 36pt
+     \let\baselinestretch\@singlespaced
+     \list{}{%
+      \baselineskip0.6\baselineskip
+      \listparindent 0em%
+      \itemindent    \listparindent
+      %\rightmargin   \leftmargin
+      %\parsep        %\z@ \@plus\p@
+      }%
+      \item\relax}
+     {\par\vspace{-12pt}
+      \let\baselinestretch\@doublespaced
+     \endlist}
+\renewenvironment{quote}{%
+      \vskip 36pt
+      \let\baselinestretch\@singlespaced
+      \list{}{%
+       \baselineskip0.6\baselineskip
+       \listparindent 0em%
+       \itemindent  \listparindent
+       %\leftmargin\rightmargin
+       }%
+       \item\relax}
+     {\par\vspace{-12pt}
+      \let\baselinestretch\@doublespaced
+     \endlist}
+%
+% Spacing for displayed formulas (redefine the \normalsize command
+% Note: In earlier implementations of LaTeX \@normalsize may need
+% to be redefined instead of \normalsize
+%bunlar kaldirildi
+%\renewcommand{\normalsize}{\@setsize\normalsize{14.5pt}\xiipt\@xiipt
+%\abovedisplayskip -20pt %\p@ plus3\p@ minus7\p@
+%\belowdisplayskip \abovedisplayskip
+%\abovedisplayshortskip  \abovedisplayskip %\z@ plus3\p@
+%\belowdisplayshortskip  \abovedisplayskip %6.5\p@ plus3.5\p@ minus3\p@
+%\let\@listi\@listI}
+%\setlength{\abovedisplayskip}{0pt}
+%\setlength{\belowdisplayskip}{0pt}
+
+%for paragraphs endiing with : ; ,
+\def\noskip{\par\vspace{-24pt}}
+
+%
+% Page style
+%
+%\oddsidemargin 1.85cm
+\evensidemargin 1.80cm
+\topmargin 0cm
+%\headheight 1cm
+%\headsep 0pt
+\textwidth145mm
+\textheight230mm
+\footskip1.5cm  %bu yoktu. eklendi
+\headheight0pt
+\headsep0pt
+\topskip0pt
+
+%\pagestyle{myheadings}
+%
+% Invoke double spacing
+\renewcommand{\baselinestretch}{1.9} % 1.9 is exactly as MS Word
+\setlength{\parskip}{\baselineskip}
+%
+
+% No page number for the landscape pages
+\AtEndEnvironment{landscape}{\pagestyle{empty}}
+
+% Fix for the equations ignoring top margin
+% don't add \topskip for equation 
+\appto\mathdisplay@push{\noindent}
+% AtBeginEnvironment
+\BeforeBeginEnvironment{multline}{\noindent}
+\BeforeBeginEnvironment{multline*}{\noindent}
+\BeforeBeginEnvironment{align}{\noindent}
+\BeforeBeginEnvironment{align*}{\noindent}
+\BeforeBeginEnvironment{eqnarray}{\noindent}
+\BeforeBeginEnvironment{eqnarray*}{\noindent}
+\BeforeBeginEnvironment{gather}{\noindent}
+\BeforeBeginEnvironment{gather*}{\noindent}
+
+%\BeforeBeginEnvironment{equation}{\vspace{-0.1cm}}		
+%\AtEndEnvironment{equation}{\vspace{-0.45cm}}
+
+% Removing extra space before and after equations 
+
+
+
+\newcommand{\twentydisplayskips}{%
+  \setlength{\abovedisplayskip}{6pt}%
+  \setlength{\belowdisplayskip}{6pt}%
+  \setlength{\abovedisplayshortskip}{6pt}%
+  \setlength{\belowdisplayshortskip}{6pt}}
+
+\AtBeginEnvironment{itemize}{\twentydisplayskips}
+\AtBeginEnvironment{enumerate}{\twentydisplayskips}
+
+\newcommand{\zerodisplayskips}{%
+  \setlength{\abovedisplayskip}{-10pt}%
+  \setlength{\belowdisplayskip}{4pt}%
+  \setlength{\abovedisplayshortskip}{-10pt}%
+  \setlength{\belowdisplayshortskip}{4pt}}
+
+\appto{\normalsize}{\zerodisplayskips}
+\appto{\small}{\zerodisplayskips}
+\appto{\footnotesize}{\zerodisplayskips}
+
+
+% % space after figures in float package
+% \setlength{\intextsep}{36pt} % Vertical space above & below [H] floats
+% \setlength{\textfloatsep}{0pt} % Vertical space below (above) [t] ([b]) floats
+% \setlength{\abovecaptionskip}{0pt}
+% \setlength{\belowcaptionskip}{0pt}
+
+%\displaywidth=\textwidth
+%\displayindent=-\leftskip
+
+% Other methods
+%\g@addto@macro\normalsize{%
+%  \setlength\abovedisplayskip{-10pt}
+%  \setlength\belowdisplayskip{4pt}
+%  \setlength\abovedisplayshortskip{-10pt}
+%  \setlength\belowdisplayshortskip{4pt}
+%}
+
+%\expandafter\def\expandafter\normalsize\expandafter{%
+%    \normalsize
+%    \setlength\abovedisplayskip{-10pt}
+%    \setlength\belowdisplayskip{4pt}
+%    \setlength\abovedisplayshortskip{-10pt}
+%    \setlength\belowdisplayshortskip{4pt}
+%}
+
+% force the equation number to be always 12pt
+\def\my@tag@font{\normalsize}
+\def\maketag@@@#1{\hbox{\m@th\normalfont\my@tag@font#1}}
+\let\amsmath@eqref\eqref
+\renewcommand\eqref[1]{{\let\my@tag@font\relax\amsmath@eqref{#1}}}
+
+
+%\setcounter{topnumber}{2} %maximum number of floats at top of page 
+%\setcounter{bottomnumber}{2} %maximum number of floats at bottom of page 
+%\setcounter{totalnumber}{4} %maximum number of floats on a page 
+%\renewcommand{\topfraction}{0.85} %maximum fraction of page for floats at top 
+%\renewcommand{\bottomfraction}{0.85} %maximum fraction of page for floats at bottom 
+%\renewcommand{\textfraction}{0.15} %minimum fraction of page for text 
+%\renewcommand{\floatpagefraction}{0.7} %minimum fraction of floatpage that should have floats
+
+% This is end of fbe_tez.sty
+
+% Alphabetical sorting for Turkish alphabets for datatools
+
+\renewcommand*{\dtlsetUTFviiicharcode}[2]{%
+  \ifstrequal{#1}{Ç}%
+  {%
+    #2=68\relax
+  }%
+  {%
+    \ifstrequal{#1}{Ğ}%
+    {%
+      #2=72\relax
+    }%
+    {%
+      \ifstrequal{#1}{I}%
+      {%
+        #2=73\relax
+      }%
+        {%
+          \ifstrequal{#1}{İ}%
+          {%
+            #2=74\relax
+          }%
+          {%
+            \ifstrequal{#1}{Ö}%
+            {%
+              #2=80\relax
+            }%
+            {%
+              \ifstrequal{#1}{Ş}%
+              {%
+                #2=84\relax
+              }%
+              {%
+                \ifstrequal{#1}{Ü}%
+                {%
+                  #2=86\relax
+                }%
+                {%
+                  \ifstrequal{#1}{ç}%
+                  {%
+                    #2=100\relax
+                  }%
+                  {%
+                    \ifstrequal{#1}{ğ}%
+                    {%
+                      #2=104\relax
+                    }%
+                    {%
+                      \ifstrequal{#1}{ı}%
+                      {%
+                        #2=105\relax
+                      }%
+                      {%
+                          \ifstrequal{#1}{i}%
+                          {%
+                            #2=106\relax
+                          }%
+                          {%
+                            \ifstrequal{#1}{ö}%
+                            {%
+                            #2=112\relax
+                            }%
+                            {%
+                              \ifstrequal{#1}{ş}%
+                              {%
+                                #2=116\relax
+                              }%
+                              {%
+                                \ifstrequal{#1}{ü}%
+                                {%
+                                  #2=118\relax
+                                }%
+                                  {%
+                                    \dtlsetdefaultUTFviiicharcode{#1}{#2}%
+                                  }%
+                                }%
+                             }%   
+                          }%
+                       }%
+                    }%
+                  }%
+                }%
+              }%
+            }%
+          }%
+        }%
+      }%
+    }%
+  }%
+
+
+
+\renewcommand*{\dtlsetdefaultUTFviiicharcode}[2]{%
+  \ifstrequal{#1}{Ç}%
+  {%
+    #2=68\relax
+  }%
+  {%
+    \ifstrequal{#1}{Ğ}%
+    {%
+      #2=72\relax
+    }%
+    {%
+      \ifstrequal{#1}{I}%
+      {%
+        #2=73\relax
+      }%
+        {%
+          \ifstrequal{#1}{İ}%
+          {%
+            #2=74\relax
+          }%
+          {%
+            \ifstrequal{#1}{Ö}%
+            {%
+              #2=80\relax
+            }%
+            {%
+              \ifstrequal{#1}{Ş}%
+              {%
+                #2=84\relax
+              }%
+              {%
+                \ifstrequal{#1}{Ü}%
+                {%
+                  #2=86\relax
+                }%
+                {%
+                  \ifstrequal{#1}{ç}%
+                  {%
+                    #2=68\relax
+                  }%
+                  {%
+                    \ifstrequal{#1}{ğ}%
+                    {%
+                      #2=72\relax
+                    }%
+                    {%
+                      \ifstrequal{#1}{ı}%
+                      {%
+                        #2=73\relax
+                      }%
+                        {%
+                          \ifstrequal{#1}{i}%
+                          {%
+                            #2=74\relax
+                          }%
+                          {%
+                            \ifstrequal{#1}{ö}%
+                            {%
+                            #2=80\relax
+                            }%
+                            {%
+                              \ifstrequal{#1}{ş}%
+                              {%
+                                #2=84\relax
+                              }%
+                              {%
+                                \ifstrequal{#1}{ü}%
+                                {%
+                                  #2=86\relax
+                                }%
+                                  {%
+                                    \dtlsetdefaultUTFviiilccharcode{#1}{#2}%
+                                  }%
+                              }%
+                            }%
+                          }%
+                        }%
+                      }%
+                    }%
+                  }%
+                }%
+              }%
+            }%
+          }%
+        }%
+    }%
+}%
+
+\renewcommand*{\dtlsetcharcode}[2]{%
+  \ifstrequal{#1}{Ç}%
+  {%
+    #2=68\relax
+  }%
+  {%
+    \ifstrequal{#1}{Ğ}%
+    {%
+      #2=72\relax
+    }%
+    {%
+      \ifstrequal{#1}{I}%
+      {%
+        #2=73\relax
+      }%
+        {%
+          \ifstrequal{#1}{İ}%
+          {%
+            #2=74\relax
+          }%
+          {%
+            \ifstrequal{#1}{Ö}%
+            {%
+              #2=80\relax
+            }%
+            {%
+              \ifstrequal{#1}{Ş}%
+              {%
+                #2=84\relax
+              }%
+              {%
+                \ifstrequal{#1}{Ü}%
+                {%
+                  #2=86\relax
+                }%
+                {%
+                  \ifstrequal{#1}{ç}%
+                  {%
+                    #2=100\relax
+                  }%
+                  {%
+                    \ifstrequal{#1}{ğ}%
+                    {%
+                      #2=104\relax
+                    }%
+                    {%
+                      \ifstrequal{#1}{ı}%
+                      {%
+                        #2=105\relax
+                      }%
+                        {%
+                          \ifstrequal{#1}{i}%
+                          {%
+                            #2=106\relax
+                          }%
+                          {%
+                            \ifstrequal{#1}{ö}%
+                            {%
+                            #2=112\relax
+                            }%
+                            {%
+                              \ifstrequal{#1}{ş}%
+                              {%
+                                #2=116\relax
+                              }%
+                              {%
+                                \ifstrequal{#1}{ü}%
+                                {%
+                                  #2=118\relax
+                                }%
+                                {%
+                                  #2=`#1\relax
+                                }%
+                              }%
+                            }%
+                          }%
+                        }%
+                      }%
+                    }%
+                  }%
+                }%
+              }%
+            }%
+          }%
+        }%
+    }%
+}%
+
+\renewcommand*{\dtlsetlccharcode}[2]{%
+  \ifstrequal{#1}{Ç}%
+  {%
+    #2=68\relax
+  }%
+  {%
+    \ifstrequal{#1}{Ğ}%
+    {%
+      #2=72\relax
+    }%
+    {%
+      \ifstrequal{#1}{I}%
+      {%
+        #2=73\relax
+      }%
+        {%
+          \ifstrequal{#1}{İ}%
+          {%
+            #2=74\relax
+          }%
+          {%
+            \ifstrequal{#1}{Ö}%
+            {%
+              #2=80\relax
+            }%
+            {%
+              \ifstrequal{#1}{Ş}%
+              {%
+                #2=84\relax
+              }%
+              {%
+                \ifstrequal{#1}{Ü}%
+                {%
+                  #2=86\relax
+                }%
+                {%
+                  \ifstrequal{#1}{ç}%
+                  {%
+                    #2=100\relax
+                  }%
+                  {%
+                    \ifstrequal{#1}{ğ}%
+                    {%
+                      #2=104\relax
+                    }%
+                    {%
+                      \ifstrequal{#1}{ı}%
+                      {%
+                        #2=105\relax
+                      }%
+                        {%
+                          \ifstrequal{#1}{i}%
+                          {%
+                            #2=106\relax
+                          }%
+                          {%
+                            \ifstrequal{#1}{ö}%
+                            {%
+                            #2=112\relax
+                            }%
+                            {%
+                              \ifstrequal{#1}{ş}%
+                              {%
+                                #2=116\relax
+                              }%
+                              {%
+                                \ifstrequal{#1}{ü}%
+                                {%
+                                  #2=118\relax
+                                }%
+                                {%
+                                  #2=\lccode`#1\relax
+                                }%
+                              }%
+                            }%
+                          }%
+                        }%
+                      }%
+                    }%
+                  }%
+                }%
+              }%
+            }%
+          }%
+        }%
+    }%
+}%

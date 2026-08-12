@@ -1,0 +1,24 @@
+% EMU_Index.ist
+% Usage
+% makeindex -s EMU_Index.ist foo.aux
+
+preamble "
+\\begin{theindex}
+  \\providecommand*\\indexgroup[1]{\\indexspace
+    \\item \\textbf{#1}\\nopagebreak}
+
+~\\clearpage
+"
+
+postamble "\n\n\\end{theindex}"
+
+group_skip "  %\n  \\indexspace\n  %\n"
+
+headings_flag 1
+heading_prefix "  %\n  \\indexgroup{"
+heading_suffix "}\n  %\n"
+
+numhead_positive "Numbers";
+numhead_negative "Numbers";
+symhead_positive "Symbols";
+symhead_negative "Symbols";

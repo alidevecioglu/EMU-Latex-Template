@@ -1,0 +1,151 @@
+% Begin the FIRST CHAPTER =========================================
+\chapter{INTRODUCTION}\label{ch:introduction}
+
+\section{General Instructions}\label{sec:generalinstructions}
+This \LaTeX~template is prepared and suggested  by the Institute of the Graduate Studies and Research (IGSR) for the graduating students who are willing to use \LaTeX~for their thesis report. The current version is a general template for engineering and mathematics programs. You may add other packages for any special input that is deemed necessary for your own thesis. However, the custom modifications need to be within the boundaries of the formatting guidelines\index{Guideline} provided by the IGSR. You may inquire your questions during format control sessions \cite{igsr}.
+
+The current document is tested and works best with Overleaf\index{Overleaf} online \LaTeX~editor \cite{overleaf}. It has been tested on TeXstudio with Tex Live as well. One important note that you should be keeping in mind while working with this template is that, you always need to put an empty line break or \texttt{\textbackslash{par}} between your paragraphs or equations but not after the chapters or sections. Otherwise it may not work as intended and it would create some spacing issues.
+
+\section{Chapters\index{Chapter} and Sections\index{Section}}\label{sec:chaptersnadsections}
+Chapters and Section headings must be declared by \texttt{\textbackslash{chapter}}, \texttt{\textbackslash{section}}, \texttt{\textbackslash{subsection}}, and \texttt{\textbackslash{subsubsection}}. However, \texttt{\textbackslash{part}} and \texttt{\textbackslash{paragraph}} commands are not supported.
+
+The title of the chapters should appear in $ALL~CAPITALS$, and the title of the sections can be either $Sentence~capital$ or $Initial~Capital$ but not both. All section titles must use justified alignment. Below is an example of \texttt{\textbackslash{subsection}}, and \texttt{\textbackslash{subsubsection}}:
+
+\subsection{Subsection\index{Section!Subsection} Example with an Unusually Long Title That May Exceed a Single Line}\label{subsec:subsectionexample}
+This is an example of how a subsection title should look like.
+
+\subsubsection{Sub-subsection\index{Section!Sub-subsection} Example}\label{subsubsec:subsubsectionexample}
+Here is an example of how a sub-subsection title should look like.
+
+\section{Paragraphs}\label{sec:paragraphs}
+Paragraphs can follow one of the following styles. Either indented at the first line with double spacing between every paragraph, or no indent but 24 pt space between every paragraph. The current template only supports the latter.
+
+For paragraphs that end with `:', `;', or `,' the author must reduce the space between the current paragraph and the next paragraph to 0pt with double spacing. For this purpose you may use the \texttt{\textbackslash{noskip}} command at the end of your paragraph. Do not use the mentioned command if the paragraph is followed by an equation.
+
+For example:\noskip
+The space between the above line and this paragraph is reduced by \texttt{\textbackslash{noskip}} command because it is considered a continuation to the previous paragraph.
+
+\subsection{Quotations\index{Quotation}}\label{subsec:quotations}
+
+Quotation with more than 40 words or 3 lines need to be put in \texttt{quotation} environment with no paragraph spacing before the quotation. Below is an example of how a quotation should look like:
+
+\noskip
+\begin{quotation}
+    Lorem ipsum, or lipsum as it is sometimes known, is dummy text used in laying out print, graphic or web designs. The passage is attributed to an unknown typesetter in the 15th century who is thought to have scrambled parts of Cicero's De Finibus Bonorum et Malorum for use in a type specimen book.
+\end{quotation}
+
+If there are several consequent quotations that are related together, you may use \texttt{\textbackslash{noskip}} between each of them.
+
+\section{Equations}\label{sec:equations}
+
+Equations can be generated using different environments. An empty line is always required before beginning your equation environment. Normally, the space between the equations and between the equation and its previous and next paragraphs is the same as the normal line skip. However, if necessary, the space after can be 24pt when the next paragraph is not related to the current equation. For this purpose, just place an empty line after the equation.
+
+Some examples for equations are given below:
+
+\begin{equation}\label{eq0}
+G_{\mu \nu }=8\pi GT_{\mu \nu }
+\end{equation}
+where $G$ is the Newton constant, $G_{\mu \nu }$.
+
+Equation Array:
+
+\begin{eqnarray}
+  \sum \vert M^{\text{viol}}_g \vert ^2
+   &=&  g^{2n-4}_S(Q^2)~N^{n-2} (N^2-1)
+\nonumber
+\\
+   &&   \times \left( \sum_{i<j}\right) \sum_{\text{perm}}
+            \frac{1}{S_{12}}  \frac{1}{S_{12}} \sum_\tau c^f_\tau
+\,.
+\label{eq:multilineeq}
+\end{eqnarray}
+Use the following blocks to create your equations for the best results. If you encountered any issues, please report them to the format check office of the IGSR. Recommended equation formats are as follows: \noskip
+
+Another simple Equation:
+
+\begin{equation} \label{eu_eqn}
+  e^{\pi i} + 1 = 0
+\end{equation}
+The beautiful equation \eqref{eu_eqn} is known as the Euler equation.
+
+Long equations can be broken in several lines using the \texttt{split} environment from \textit{amsmath} package or using multi-line equation environment. For example, see the equation below.
+
+\begin{equation}
+p(x) = 3x^6 + 14x^5y + 590x^4y^2 + 19x^3y^3 - 12x^2y^4 - 12xy^5 + 2y^6 - a^3b^3 - 2a^2b^2 + 3x^3y^3
+\end{equation}
+Multi-line equation version:
+
+\begin{multline}
+p(x) = 3x^6 + 14x^5y + 590x^4y^2 + \\
+  19x^3y^3 - 12x^2y^4 - 12xy^5 + \\
+  2y^6 - a^3b^3 - 2a^2b^2 + 3x^3y^3
+\end{multline}
+Split equation version:
+
+\begin{equation}
+\begin{split}
+p(x) = 3x^6 + 14x^5y + 590x^4y^2 + \\
+19x^3y^3 - 12x^2y^4 - 12xy^5 + \\
+2y^6 - a^3b^3 - 2a^2b^2 + 3x^3y^3
+\end{split}
+\end{equation}
+Equation using align:
+
+\begin{align*}
+2x - 5y &=  8 \\
+3x + 9y &=  -12
+\end{align*}
+Equation with nested aligned environment. This is for multi line equations with only one equation number using aligned nested in equation:
+
+\begin{equation} \label{nested_eqn}
+\begin{aligned}
+x&=y           &  w &=z              &  a&=b+c\\
+2x&=-y         &  3w&=\frac{1}{2}z   &  a&=b\\
+-4 + 5x&=2+y   &  w+2&=-1+w          &  ab&=cb
+\end{aligned}
+\end{equation}
+\filbreak %fillbreak is used when you want to keep the upcoming text together with the current text. For example here Grouping: with the next equation should be on the same page.
+Grouping:
+
+\begin{gather*}
+2x - 5y =  8 \\
+3x^2 + 9y =  3a + c
+\end{gather*}
+
+\section{Lists\index{List}}\label{sec:lists}
+You can use the \texttt{\textbackslash{itemize}} environments for unordered lists\index{List!Unordered List} or \texttt{\textbackslash{enumerate}} command for ordered lists to generate lists.
+% Use \noskip for paragraphs ending with ':', ';', and ','
+% except when the next line is an equation
+Unordered list\index{List!Unordered List} example:\noskip
+
+\begin{itemize}
+  \item One entry in the list,
+  \item Another entry in the list.
+\end{itemize}
+
+Ordered\index{List!Ordered List} list example:\noskip
+
+\begin{enumerate}
+  \item The labels consists of sequential numbers.
+  \item The numbers starts at 1 with every call to the enumerate environment.
+\end{enumerate}
+
+Ordered list\index{List!Ordered List} example with roman labels:\noskip
+\begin{enumerate}[label=\roman*.]
+  \item The labels consists of sequential numbers.
+  \item The numbers starts at i with every call to the enumerate environment.
+\end{enumerate}
+
+Nested list\index{List!Nested List} example:\noskip
+
+\begin{enumerate}
+   \item The labels consists of sequential numbers.
+   \begin{itemize}
+     \item The individual entries are indicated with a black dot, a so-called bullet.
+        \begin{equation} \label{eu_eqn_itemize}
+          e^{\pi i} + 1 = 0
+        \end{equation}
+     \item The text in the entries may be of any length.
+   \end{itemize}
+   \item The numbers starts at 1 with every call to the enumerate environment.
+\end{enumerate}

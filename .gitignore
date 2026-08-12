@@ -1,0 +1,35 @@
+# LaTeX build artifacts
+*.aux
+*.bbl
+*.bcf
+*.blg
+*.fdb_latexmk
+*.fls
+*.idx
+*.ilg
+*.ind
+*.lof
+*.log
+*.lot
+*.nlo
+*.nls
+*.out
+*.run.xml
+*.synctex.gz
+*.toc
+*.xdy
+
+# Compiled PDFs produced by compile.sh at the repo root
+# (EMU_Thesis.pdf itself is also a build artifact of the same command)
+/EMU_Thesis.pdf
+/*.pdf
+
+# compile.sh working directory
+.compile-thesis.*
+
+# epstopdf auto-converts .eps figures to .pdf on first compile
+*-eps-converted-to.pdf
+
+# Editor/OS cruft
+.DS_Store
+*.swp
