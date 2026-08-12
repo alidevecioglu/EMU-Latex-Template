@@ -84,6 +84,16 @@ rejections that kept recurring across multiple students' actual defense
 submissions (see "Fixes applied" above for the specific reasoning behind
 each one).
 
+### Contributors
+
+The fixes in this fork weren't guessed at — they're things this
+project's author and the following fellow EMU students independently
+hit and confirmed in their own theses' format-control review, which is
+what made them worth fixing here for everyone:
+
+- [İsmet Volkan Mimar](https://github.com/ism3t)
+- [Mustafa Mehmet Yaman](https://github.com/YamanMustafa)
+
 ## Getting started
 
 ```bash
