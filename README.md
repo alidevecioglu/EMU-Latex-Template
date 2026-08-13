@@ -1,5 +1,11 @@
 # EMU Thesis LaTeX Template (fixed fork)
 
+<p align="center">
+  <a href="INSTALL.md">Install</a> &middot;
+  <a href="CONTRIBUTING.md">Contributing</a> &middot;
+  <a href="LICENSE">License</a>
+</p>
+
 ![A man happily throws a Word document into the trash while a laptop on a nearby desk displays cleanly typeset LaTeX math](images/man-throws-word-into-trash.png)
 
 A fork of the official Eastern Mediterranean University thesis LaTeX
@@ -81,7 +87,7 @@ last. This fork is the latest link, not a from-scratch rewrite:
 | Erfan A. Shams (2021) | Current published version: nomenclature-package support, horizontal (landscape) page support, INDEX support, and the CC BY 4.0 relicense this fork inherits |
 | [İsmet Volkan Mimar](https://github.com/ism3t) (2026) | Independently confirmed the caption-alignment and appendix-list format-control issues in his own thesis, and the figure/table float-placement fix folded into this fork |
 | [Mustafa Mehmet Yaman](https://github.com/YamanMustafa) (2026) | Independently confirmed the caption-alignment, page-numbering, and caption-capitalization format-control issues in his own thesis |
-| [Ali Devecioglu](https://devecy.com) (2026, this fork) | The format-control fixes and additions listed above: caption alignment, float placement, page-numbering, appendix list exclusion, revision markup, configurable chair/director title |
+| [Ali Devecioglu](https://devecy.com) (2026, this fork) | The format-control fixes and additions listed above: caption alignment, float placement, page-numbering, appendix list exclusion, revision markup, configurable chair/director title, no manual bold in body text |
 
 Each of those additions exists because the version before it didn't do
 something a real thesis needed: landscape pages for wide figures, an
@@ -231,6 +237,19 @@ at from the template alone.
    ```
    Defaults to the original "Chair, Department of" wording if you don't
    set it, so existing Department-based approval pages are unaffected.
+
+9. **No manual bold in running body text.** Also format-control-checked:
+   IGSR reviewers flag `\textbf{}` used for emphasis inside paragraph
+   prose, list-item leads (e.g. "**Term.** Rest of the sentence..."), or
+   field labels in a structured listing (e.g. "**Question:** ..."). Not a
+   macro fix, a documented convention (see the comment in
+   `chapters/02-preliminary-sections.tex`): use `\emph{}` for a run-in
+   lead/label, or leave the term unstyled for inline mid-sentence
+   emphasis. `\textbf{}` is still fine outside body text: table column
+   headers, and labels inside a figure/diagram (e.g. a TikZ node). The
+   bold "Keywords"/"Anahtar Kelimeler" line in the Abstract/ÖZ (see
+   `EMU_Thesis.tex`) is a separate, standard front-matter convention, not
+   body prose, and is unaffected.
 
 ## What's unchanged
 

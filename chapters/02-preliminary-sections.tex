@@ -66,6 +66,14 @@ Tables and figures are preferred to be on the top of the page unless it is neces
 % \texttt{l}/\texttt{c}/\texttt{r} column takes its natural (unwrapped) width from
 % its widest cell, so one long entry can silently push the whole table past
 % the right margin -- this is the single most common overflow bug students hit.
+% Also format-control-checked: don't use manual \textbf{} for emphasis in
+% running body text (paragraph prose, list-item leads such as "Term. Rest of
+% the sentence...", or field labels in a structured listing). Use \emph{}
+% instead, or leave it unstyled. \textbf{} is still fine where it isn't body
+% text: table column headers, and labels inside a figure/diagram (e.g. a
+% TikZ node). The bold "Keywords"/"Anahtar Kelimeler" line in the
+% Abstract/ÖZ is a separate, standard front-matter convention, not body
+% prose, and keeps its bold.
 
 Table \ref{table:1} is defined to be immediately after its preceding paragraph, while, Table \ref{table:2} and Figure \ref{fig:disc1} are defined to be on top of the page.
 
